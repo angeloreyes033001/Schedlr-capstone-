@@ -49,7 +49,7 @@ class YearLevelController extends Controller
                 Log::error("Failed to create yearlevels");
             }
 
-            return response()->json(["status"=>true,"msg"=>"Successfully Created!"]);
+            return response()->json(["status"=>true,"msg"=>"Successfully Created"]);
         }
         catch(Exception $e){
             Log::error($e->getMessage());
@@ -61,7 +61,7 @@ class YearLevelController extends Controller
             $department = $this->tokenDepartment($tokens);
             $years = YearLevel::join('departments','yearlevelDepartment','=','department')
             ->where([ 'yearlevelDepartment'=>$department ,'yearlevelSoftDelete'=>0,"departmentSoftDelete"=>0])
-            ->select('yearlevelID as id', 'yearlevelID as year', 'yearlevel as yearName')
+            ->select('yearlevelID as id', 'yearlevel as year')
             ->get();
             return response()->json($years);
         }
@@ -102,14 +102,13 @@ class YearLevelController extends Controller
             ->where(['yearlevel'=>$request->input('yearlevel'), "yearlevelDepartment"=>$department,"yearlevelSoftDelete"=>0,"departmentSoftDelete"=>0])->count();
 
             if($check > 0){
-                return response()->json(["status"=>false, "msg"=>"This Year Level is already registered.", "error"=>"yearlevel"]);
+                return response()->json(["status"=>false, "msg"=>$request->input('yearlevel')." is already registered.", "error"=>"yearlevel"]);
             }
 
-            YearLevel::join('departments','yearlevelDepartment','=','department')
-            ->where(['yearlevelID'=>$request->input('id') ,'yearlevelDepartment'=>$department,'yearlevelSoftDelete'=>0,'departmentSoftDelete'=>0])
+            YearLevel::where(['yearlevelID'=>$request->input('id')])
             ->update(['yearlevel'=>strtolower($request->input('yearlevel'))]);
 
-            return response()->json(["status"=>true,"msg"=>"Successfully Updated!"]);
+            return response()->json(["status"=>true,"msg"=>"Successfully Updated"]);
         }
         catch(Exception $e){
             Log::error($e->getMessage());
@@ -118,9 +117,8 @@ class YearLevelController extends Controller
 
     protected function delete($id){
         try{
-            YearLevel::join('departments','yearlevelDepartment','=','department')
-            ->where(['yearlevelID'=>$id])->update(['yearlevelSoftDelete'=>1,"departmentSoftDelete"=>0]);
-            return response()->json(["status"=>true,"msg"=>"Successfully Deleted!"]);
+            YearLevel::where(['yearlevelID'=>$id])->update(['yearlevelSoftDelete'=>1]);
+            return response()->json(["status"=>true,"msg"=>"Successfully Deleted"]);
         }
         catch(Exception $e){
             Log::error($e->getMessage());

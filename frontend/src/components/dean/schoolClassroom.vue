@@ -54,7 +54,7 @@
                             <label v-if="isEditMode != classroom.id" class="t-capitalize t-font-normal text-muted t-truncate" :title="classroom.yearName" >{{ classroom.yearName }}</label>
                             <div v-else  class="form-group t-pl-[3px] t-pr-[3px] t-w-full" >
                                 <select  v-model="classrooms.year"  class="form-select">
-                                    <option  v-for="year in yearlevelData" :value="year.id" >{{ year.yearName }}</option>
+                                    <option  v-for="year in yearlevelData" :value="year.id" >{{ year.year }}</option>
                                 </select>
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                                 <label for="">Year</label>
                                 <select v-model="classrooms.year" :disabled="isProcess" class="form-select" >
                                     <option selected value="" >Select Year</option>
-                                    <option v-for="year in yearlevelData" :key="year.id" :value="year.id" >{{ year.yearName }}</option>
+                                    <option v-for="year in yearlevelData" :key="year.id" :value="year.id" >{{ year.year }}</option>
                                 </select>
                             </div>
                             <small class="text-danger" v-if="classroomError.year != ''" >{{ classroomError.year }}</small>

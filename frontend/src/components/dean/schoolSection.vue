@@ -83,7 +83,7 @@
                                 <label for="">Yearlevels</label>
                                 <select :disabled="isProcess" v-model="sections.yearlevel" class="form-select text-capitalize" >
                                     <option value="">SELECT YEARLEVEL</option>
-                                    <option class="text-capitalize" v-for="year in globalYearlevel" :value="year.id" >{{ year.yearName }}</option>
+                                    <option class="text-capitalize" v-for="year in globalYearlevel" :value="year.id" >{{ year.year }}</option>
                                 </select>
                             </div>
                             <small class="text-danger" v-if="sections.yearlevel_error != ''" >{{ sections.yearlevel_error }}</small>
@@ -130,7 +130,7 @@
                             <div class="form-group">
                                 <label for="">Yearlevels</label>
                                 <select :disabled="isProcess" v-model="vUpdate.yearlevel" class="form-select text-capitalize" >
-                                    <option class="text-capitalize" v-for="year in globalYearlevel" :value="year.id" >{{ year.yearName }}</option>
+                                    <option class="text-capitalize" v-for="year in globalYearlevel" :value="year.id" >{{ year.year }}</option>
                                 </select>
                             </div>
                             <small class="text-danger" v-if="vUpdate.yearlevel_error != ''" >{{ vUpdate.yearlevel_error }}</small>

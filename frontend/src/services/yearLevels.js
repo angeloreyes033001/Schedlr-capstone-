@@ -13,9 +13,9 @@ export const yearlevelStore = defineStore(('yearlevels'),{
             this.yearlevels = response;
         },
 
-        async create(data){
+        async create(year){
             const formData = new FormData();
-            formData.append('yearlevel', data.yearlevel);
+            formData.append('yearlevel', year);
             formData.append('tokens',localStorage.getItem('tokens'));
 
             const response = await apiRequest.post('/api/yearlevels/create',formData);
@@ -25,7 +25,7 @@ export const yearlevelStore = defineStore(('yearlevels'),{
         async update(data){
             const formData = new  FormData();
             formData.append('id', data.id );
-            formData.append('yearlevel', data.yearlevel);
+            formData.append('yearlevel', data.year);
             formData.append('tokens', localStorage.getItem('tokens'));
 
             const response = await apiRequest.post('/api/yearlevels/update',formData);
