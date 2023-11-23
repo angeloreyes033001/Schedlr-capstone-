@@ -33,8 +33,7 @@ export const classroomStore = defineStore('classrooms',{
             const response = await apiRequest.post('/api/classrooms/update',formData);
             this.response = response;
         },
-        async delete(data){
-            const id = data;
+        async delete(id){
             const response = await apiRequest.get(`/api/classrooms/delete/${id}`);
             this.response = response;
         }

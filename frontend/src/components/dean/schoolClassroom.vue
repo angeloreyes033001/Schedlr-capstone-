@@ -93,10 +93,10 @@
                             })" >
                                 <fa icon="edit" class="t-text-[18px] t-font-semibold t-text-slate-400 hover:t-text-slate-200" ></fa>
                             </button>
-                            <button  v-if="isEditMode != classroom.id"  v-show="isEditMode == ''" :disabled="isProcess" class="" >
+                            <button  @click="delete_classroom(classroom.id)" v-if="isEditMode != classroom.id"  v-show="isEditMode == ''" :disabled="isProcess" class="" >
                                 <fa icon="trash" class="t-text-[18px] t-font-semibold t-text-red-400 hover:t-text-red-200" ></fa>
                             </button>
-                            <button v-else @click="classroom_update"  v-show="isEditMode != ''" :disabled="isProcess" class="" >
+                            <button v-else @click="update_classroom"  v-show="isEditMode != ''" :disabled="isProcess" class="" >
                                 <fa icon="save" class="t-text-[18px] t-font-semibold t-text-blue-400 hover:t-text-red-200" ></fa>
                             </button>
                         </div>
@@ -114,7 +114,7 @@
                     <button @click="entireReset()" :disabled="isProcess" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form @submit.prevent="classroom_create"  >
+                    <form @submit.prevent="create_classroom"  >
                         <div class="mt-2">
                             <div class="form-group">
                                 <label for="">Room</label>
@@ -248,7 +248,7 @@ const computed_classroom = computed(()=>{
     }
 })
 
-const classroom_create = ()=>{
+const create_classroom = ()=>{
     try {
         Swal.fire({
             title: "Are you sure?",
@@ -294,7 +294,7 @@ const classroom_create = ()=>{
     }
 }
 
-const classroom_update = ()=>{
+const update_classroom = ()=>{
     try {
         Swal.fire({
             title: "Are you sure?",
@@ -321,6 +321,32 @@ const classroom_update = ()=>{
                 }
             }
         });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const delete_classroom = (id)=>{
+    try {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes,Delete it!"
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                await use_classroomStore.delete(id);
+                const response = use_classroomStore.getResponse;
+                if(response.status){
+                    await use_classroomStore.read();
+                    classroomData.value = use_classroomStore.getClassrooms;
+                    Swal.fire("Success",response.msg,'success');
+                }
+            }
+        });       
     } catch (error) {
         console.error(error)
     }
