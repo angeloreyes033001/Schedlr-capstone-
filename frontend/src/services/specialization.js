@@ -25,6 +25,17 @@ export const specializationStore = defineStore('specializations',{
             this.specialization = response;
         },
 
+        async update(data){
+            const formData = new FormData();
+            formData.append('tokens',localStorage.getItem('tokens'));
+            formData.append('id',data.id);
+            formData.append('specialization',data.specialization);
+
+            const response = await apiRequest.post('/api/specialization/update',formData);
+            this.response = response;
+
+        },
+
         async delete(id){
             const formData = new FormData();
             formData.append('id',id);
@@ -35,7 +46,6 @@ export const specializationStore = defineStore('specializations',{
         },
 
         async autocreatecommon(){
-            // const response = await apiRequest.get(`/api/departments/delete/${department}`);
             const tokens = localStorage.getItem('tokens');
             await apiRequest.get(`/api/specialization/autocreatecommon/${tokens}`);
             //no response this only for create "common" choices

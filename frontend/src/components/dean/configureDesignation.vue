@@ -73,31 +73,6 @@
             </div>
         </div>
     </div>
-    <!-- modal edit -->
-    <!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title t-font-bold text-muted" id="staticBackdropLabel">UPDATE</h5>
-                    <button :disabled="isProcess" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form @submit.prevent="updateDesignation" >
-                        <div class="mt-3">
-                            <div class="form-group">
-                                <label>Hour</label>
-                                <input :disabled="isProcess" v-model="vUpdate.hour" class="form-control" type="text" >
-                            </div>
-                            <small class="text-danger" v-if="vUpdate.error_hour" >{{ vUpdate.error_hour }}</small>
-                        </div>
-                        <div class="mt-3 text-end">
-                            <button :disabled="isProcess" class="btn btn-primary w-50" ><fa icon="save" ></fa> Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </template>
 <script setup >
 import { ref , inject, computed } from 'vue';

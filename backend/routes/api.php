@@ -63,6 +63,7 @@ Route::group(['prefix'=>'specialization'], function(){
     Route::get('autocreatecommon/{tokens}', [ SpecializationController::class , 'AutoCreateCommon' ]);
     Route::post('create', [ SpecializationController::class , 'create' ]);
     Route::get('read/{tokens}',[SpecializationController::class , 'read' ]);
+    Route::post('update',[SpecializationController::class,'update']);
     Route::post('delete', [ SpecializationController::class , 'delete' ]);
 });
 
