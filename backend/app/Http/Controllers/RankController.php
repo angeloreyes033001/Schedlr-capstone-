@@ -14,7 +14,7 @@ class RankController extends Controller
         try{
             $validator = Validator::make($request->all(),[
                 'rank'=> 'required',
-                'hour'=>'required|Integer',
+                "hour"=>'required|numeric|min:0|max:30',
                 'tokens'=>'required',
             ]);
 
@@ -35,10 +35,6 @@ class RankController extends Controller
                 }
             }
 
-            if($request->input('hour') < 10 || $request->input('hour') > 50  ){
-                return response(["status"=>false, "error"=>"hour", "msg"=>"minimun 5 hours and maximun is 50hours"]);
-            }
-
             $departments = $this->tokenDepartment($request->input('tokens'));
 
             $check = Rank::join("departments","rankDepartment","=","department")
@@ -46,20 +42,17 @@ class RankController extends Controller
             ->count();
 
             if($check > 0){
-                return response()->json(['status'=>false, "error"=>"rank", "msg"=>"This ranks is already registered!"]);
+                return response()->json(['status'=>false, "error"=>"rank", "msg"=>$request->input('rank')." is already registered!"]);
             }
 
             $save = new Rank();
             $save->rankName = strtolower($request->input('rank'));
             $save->rankHour = $request->input('hour');
             $save->rankDepartment = $departments;
-            $result = $save->save();
+            $save->save();
 
-            if(!$result){
-                Log::error("Failed to create ranks!");
-            }
 
-            return response()->json(["status"=>true,"msg"=>"Successfully Created!"]);
+            return response()->json(["status"=>true,"msg"=>"Successfully Created"]);
         }
         catch(Exception $e){
             Log::error($e->getMessage());
@@ -86,7 +79,7 @@ class RankController extends Controller
             $validator = Validator::make($request->all(),[
                 'id'=>'required',
                 'rank'=> 'required',
-                'hour'=>'required|Integer',
+                "hour"=>'required|numeric|min:0|max:30',
             ]);
 
             if($validator->fails()){
@@ -107,11 +100,11 @@ class RankController extends Controller
                 }
             }
 
-            Rank::join("departments","rankDepartment","=","department")->
-            where(['rankID'=>$request->input('id'),"rankSoftDelete"=>0,"departmentSoftDelete"=>0])
+            Rank::join("departments","rankDepartment","=","department")
+            ->where(['rankID'=>$request->input('id'),"rankSoftDelete"=>0,"departmentSoftDelete"=>0])
             ->update(['rankName'=>strtolower($request->input('rank')),'rankHour'=>$request->input('hour')]);
 
-            return response()->json(["status"=>true, "msg"=>"Successfully Updated!"]);
+            return response()->json(["status"=>true, "msg"=>"Successfully Updated"]);
         }
         catch(Exception $e){
             Log::error($e->getMessage());
@@ -122,7 +115,7 @@ class RankController extends Controller
         try{
             Rank::join("departments","rankDepartment","=","department")
             ->where(['rankID'=>$id])->update(['rankSoftDelete'=>1,"departmentSoftDelete"=>0]);
-            return response()->json(["status"=>true, "msg"=>"Successfully Deleted!"]);
+            return response()->json(["status"=>true, "msg"=>"Successfully Deleted"]);
         }
         catch(Exception $e){
             Log::error($e->getMessage());

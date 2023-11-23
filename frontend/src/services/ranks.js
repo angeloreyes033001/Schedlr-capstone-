@@ -14,8 +14,7 @@ export const rankStore = defineStore('ranks',{
             formData.append('hour',data.hour);
             formData.append('tokens',localStorage.getItem('tokens'));
             const response = await apiRequest.post('/api/ranks/create',formData);
-            this.response = response;
-            
+            this.response = response; 
         },
 
         async read(){
