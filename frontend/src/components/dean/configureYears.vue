@@ -37,7 +37,7 @@
                     v-for="year in computed_yearlevel" :key="year.id" >
                         <div class="t-flex t-items-center t-h-full" >
                             <label v-if="isEditMode != year.id" class="t-capitalize t-font-normal text-muted t-truncate" :title="year.year" >{{ year.year }}</label>
-                            <div v-else  class="form-group t-pl-[3px] t-pr-[3px]" >
+                            <div v-else  class="t-w-full t-pl-[3px] t-pr-[3px]" >
                                 <input v-model="yearlevels.year" :disabled="isProcess" type="text" class="form-control t-capitalize" >
                             </div>
                         </div>

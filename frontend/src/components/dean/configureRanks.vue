@@ -46,13 +46,13 @@
                     v-for="rank in computed_rank" :rank="rank.id" >
                         <div class="t-flex t-items-center t-h-full" >
                             <label v-if="isEditMode != rank.id" class="t-capitalize t-font-normal text-muted t-truncate" :title="rank.rank" >{{ rank.rank }}</label>
-                            <div v-else  class="form-group t-pl-[3px] t-pr-[3px]" >
+                            <div v-else  class="t-w-full t-pl-[3px] t-pr-[3px]" >
                                 <input v-model="ranks.rank" :disabled="isProcess" type="type" class="form-control t-capitalize" >
                             </div>
                         </div>
                         <div class="t-flex t-items-center t-h-full" >
                             <label v-if="isEditMode != rank.id" class="t-capitalize t-font-normal text-muted t-truncate" :title="rank.hour" >{{ rank.hour }}</label>
-                            <div v-else  class="form-group t-pl-[3px] t-pr-[3px]" >
+                            <div v-else  class="t-w-full t-pl-[3px] t-pr-[3px]" >
                                 <input v-model="ranks.hour" :disabled="isProcess" type="number" min="0" max="30" class="form-control t-capitalize" >
                             </div>
                         </div>

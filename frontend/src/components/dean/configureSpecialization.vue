@@ -39,7 +39,7 @@
                         v-if="specialization.specialization != 'common'" >
                             <div class="t-flex t-items-center t-h-full" >
                                 <label v-if="isEditMode != specialization.id" class="t-uppercase t-font-normal text-muted t-truncate" :title="specialization.specialization" >{{ specialization.specialization }}</label>
-                                <div v-else  class="form-group t-pl-[3px] t-pr-[3px]" >
+                                <div v-else  class="t-w-full t-pl-[3px] t-pr-[3px]" >
                                     <input v-model="specializations.specialization" :disabled="isProcess" type="type" class="form-control t-uppercase" >
                                 </div>
                             </div>

@@ -26,14 +26,14 @@ class SectionController extends Controller
                     return response()->json(["status"=>false, "error"=>"section", "msg"=>$errorMessage]);
                 }
 
-                if($validator->errors()->has('specialization')){
-                    $errorMessage = $validator->errors()->first('specialization');
-                    return response()->json(["status"=>false, "error"=>"specialization", "msg"=>$errorMessage]);
-                }
-
                 if($validator->errors()->has('yearlevel')){
                     $errorMessage = $validator->errors()->first('yearlevel');
                     return response()->json(["status"=>false, "error"=>"yearlevel", "msg"=>$errorMessage]);
+                }
+
+                if($validator->errors()->has('specialization')){
+                    $errorMessage = $validator->errors()->first('specialization');
+                    return response()->json(["status"=>false, "error"=>"specialization", "msg"=>$errorMessage]);
                 }
 
                 if($validator->errors()->has('tokens')){
@@ -49,7 +49,7 @@ class SectionController extends Controller
             ->count();
 
             if($check > 0){
-                return  response()->json(["status"=>false, "error"=>"section", "msg"=>"This section is already registered!"]);
+                return  response()->json(["status"=>false, "error"=>"section", "msg"=>$request->input('section')." is already registered"]);
             }
 
             $save = new Section();
@@ -57,13 +57,10 @@ class SectionController extends Controller
             $save->sectionYearlevel = $request->input('yearlevel');
             $save->sectionSpecialization = $request->input('specialization');
             $save->sectionDepartment = $department;
-            $result = $save->save();
+            $save->save();
 
-            if(!$result){
-                Log::error("Failed to create sections!");
-            }
 
-            return response()->json(["status"=>true,"msg"=>"Successfully Created!"]);
+            return response()->json(["status"=>true,"msg"=>"Successfully Created"]);
 
         }
         catch(Exception $e){
@@ -141,7 +138,7 @@ class SectionController extends Controller
                 "sectionSpecialization"=>$request->input('specialization')
             ]);
 
-            return response()->json(["status"=>true,"msg"=>"Successfully Updated!"]);
+            return response()->json(["status"=>true,"msg"=>"Successfully Updated"]);
 
         }
         catch(Exception $e){
@@ -151,16 +148,9 @@ class SectionController extends Controller
 
     protected function delete($id){
         try{
-            Section::join('departments','sectionDepartment','=','department')
-            ->join("year_levels","sectionYearlevel","=","yearlevelID")
-            ->join("specializations",'sectionSpecialization','=','specializationID')
-            ->where(['sectionID'=>$id])->update([
-                "sectionSoftDelete"=>1,
-                'yearlevelSoftDelete'=>0,
-                'specializationSoftDelete'=>0,
-                'departmentSoftDelete'=>0
-            ]);
-            return response()->json(["status"=>true,"msg"=>"Successfully Deleted!"]);
+            Section::where(['sectionID'=>$id])
+            ->update(["sectionSoftDelete"=>1]);
+            return response()->json(["status"=>true,"msg"=>"Successfully Deleted"]);
         }
         catch(Exception $e){
             Log::error($e->getMessage());
