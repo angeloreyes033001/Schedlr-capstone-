@@ -139,6 +139,8 @@
 import {ref,onMounted,computed, inject} from 'vue';
 import {sectionStore} from '../../services/sections';
 import Swal from 'sweetalert2';
+import { specializationStore } from '../../services/specialization';
+const use_specializationStore = specializationStore();
 
 const use_sectionStore = sectionStore();
 
@@ -147,6 +149,18 @@ const sectionData = ref(globalSectionData);
 
 const globalSpecialization = inject("globalSpecialization");
 const specializationData = ref(globalSpecialization);
+
+const mounted_create_common = async ()=>{
+    try {
+        await use_specializationStore.autocreatecommon();
+        specializationData.value = use_specializationStore.getSpecialization;
+    }catch (error) {
+        console.error(error)
+    }
+}
+onMounted( async()=>{
+    await mounted_create_common();
+})
 
 const globalYearlevel = inject('globalYearLevelData');
 

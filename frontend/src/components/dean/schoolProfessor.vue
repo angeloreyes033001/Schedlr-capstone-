@@ -31,7 +31,7 @@
                     <div v-show="isSelectedTab === 'list'" class="t-grid t-grid-cols-1" :class="{'t-grid-cols-[620px,1fr]': isSelectLoad != ''}" >
                         <!-- list div -->
                         <div class="t-inline-block" >
-                            <div v-for="professor in computed_professor" class="t-bg-white t-w-[300px] t-shadow t-h-auto t-inline-block t-m-1" >
+                            <div v-if="professorData.length > 0" v-for="professor in computed_professor" class="t-bg-white t-w-[300px] t-shadow t-h-auto t-inline-block t-m-1" >
                                 <div class="t-grid t-rounded-[10px] parent-white t-w-full" >
                                     <div :class="{'t-bg-logoOrange':isSelectLoad == professor.professorID}" class="t-bg-logoBlue t-p-2 t-rounded-[10px] t-grid t-grid-cols-[80px,1fr] t-w-full" >
                                         <div class="t-flex t-justify-center t-items-center t-p-2" >
@@ -120,6 +120,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div v-else class=" t-justify-center t-items-center t-w-full p-5 t-grid" >
+                                <img class="t-w-[700px]" src="../../assets/images/no-data.svg" alt="no-data">
+                                <h6 class="text-center t-capitalize t-mt-2" > no record found</h6>
                             </div>
                         </div>
                         <div class="" v-show="isSelectLoad != ''" >
@@ -241,94 +245,6 @@
         </div>
         </div>
     </div>
-    <!-- <div class="p-4" >
-        <div class="t-flex">
-            <h4 class="text-uppercase t-font-bold">Professors</h4>
-        </div>
-        <hr>
-        <div class="navbar">
-            <span></span>
-            <form class="d-flex gap-2 w-" >
-                <div class="form-group border t-flex rounded-2 t-shadow-md">
-                    <span class="fs-6 p-1 text-secondary p-2"><fa icon="search"></fa></span>
-                    <input v-model="isSearch" class="t-border-none t-outline-none fs-6 w-100" type="text" placeholder="Search">
-                </div>
-            </form>
-        </div>
-        <button type="button" class="btn btn-outline-primary ms-2 w-25" data-bs-toggle="modal" data-bs-target="#addModal"><fa icon="plus"></fa>ADD PROFESSOR</button>
-        <div class="mt-3" v-if="professorData.length > 0" >
-            <div v-for="professor in computedProfessor" :key="professor.professorID"  class=" professor-card t-w-[300px] bg-white shadow m-3 t-inline-block">
-                <div class=" t-bg-logoBlue t-relative t-h-[100px] t-grid t-justify-center t-items-center t-rounded-md">
-                    <div class="t-absolute t-right-2 t-top-2 text-white " >
-                        <button class="" >
-                            <fa @click="showOption(professor.professorID)" class="t-cursor-pointer t-text-[18px]" icon="ellipsis-v" ></fa>
-                        </button>
-                        <div class="t-relative t-bg-red-500" >
-                            <div class="t-absolute bg-white t-w-[40px] t-right-0 t-grid t-rounded " v-show="options == professor.professorID" >
-                                <span class="p-1 text-center" >
-                                    <button data-bs-toggle="modal" data-bs-target="#editModal" @click="setUpdataData({id: professor.professorID, fullname: professor.fullname, status: professor.status , rank: professor.rankID , designation: professor.designation })" class="text-primary" >
-                                        <fa icon="edit" ></fa>
-                                    </button>
-                                </span>
-                                <span class="p-1 text-center" >
-                                    <button @click="deleteProfessor(professor.professorID)" class="text-danger" >
-                                        <fa icon="trash" ></fa>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <img src="../../assets/images/profile.png" alt="" class=" t-w-[120px] t-h-[120px] t-mt-[30px] t-shadow  t-bg-slate-200 rounded-circle" >
-                </div>
-                <div class="t-mt-[50px] p-2 ">
-                    <span class="t-flex" >
-                        <h6 class="text-capitalize t-text-[14px] ms-1 t-mb-[0px]" >
-                            <strong class="t-font-semibold" >ID: </strong>
-                            <small class="" >{{ professor.professorID }}</small>
-                        </h6>
-                    </span>
-                    <span class="t-flex" >
-                        <h6 class="text-capitalize t-text-[14px] ms-1 t-mb-[0px]" >
-                            <strong class="t-font-semibold" >Fullname: </strong>
-                            <small class="" >{{ professor.fullname }}</small>
-                        </h6>
-                    </span>
-                    <span class="t-flex" >
-                        <h6 class="text-capitalize t-text-[14px] ms-1 t-mb-[0px]" >
-                            <strong class="t-font-semibold" >Status: </strong>
-                            <small class="" >{{ professor.status }}</small>
-                        </h6>
-                    </span>
-                    <span class="t-flex" >
-                        <h6 class="text-capitalize t-text-[14px] ms-1 t-mb-[0px]" >
-                            <strong class="t-font-semibold" >rank: </strong>
-                            <small class="" >{{ professor.rank }}</small>
-                        </h6>
-                    </span>
-                    <span class="t-flex" >
-                        <h6 class="text-capitalize t-text-[14px] ms-1 t-mb-[0px]" >
-                            <strong class="t-font-semibold" >designated: </strong>
-                            <small class="" >{{ professor.designation }}</small>
-                        </h6>
-                    </span>
-                    <div class="mt-1" >
-                        <button @click="readLoad(professor.professorID)" data-bs-toggle="modal" data-bs-target="#loadModal" class="btn btn-outline-success w-100"><fa icon="eye" ></fa> SHOW LOAD</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-else>
-            <div class="t-grid t-justify-center t-items-center mt-5 pt-5" >
-                <div  >
-                    <div class="t-flex t-justify-center" >
-                        <img src="../../assets/images/no-professor.png" >
-                    </div>
-                    <h6 class="t-font-extralight" >No professor recorded.</h6>
-                </div>
-            </div>
-        </div>
-    </div> -->
-     <!-- modal add -->
      <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -393,61 +309,6 @@
             </div>
         </div>
     </div>
-    <!-- edit modal -->
-    <!-- load modal -->
-    <!-- <div class="modal fade" id="loadModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loadModalLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-xl">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-white text-uppercase" id="loadModalLabel">Professor Loads</h5>
-                    <button type="button" class="text-white fs-4 " data-bs-dismiss="modal" aria-label="Close"> 
-                        <fa icon="close"></fa>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="navbar">
-                        <span></span>
-                        <div class="d-flex gap-2 w-25" >
-                               <select class="form-select text-uppercase"  v-model="loads.subject">
-                                <option class="text-uppercase text-center" value="">--select subject--</option>
-                                <option class="text-uppercase" v-for="subject in globalSubjectData" :key="subject.code" :value="subject.code">{{ subject.code }}</option>
-                               </select>
-                            <button  @click="createLoad(selectedProfessor)"  class="btn btn-outline-primary" ><fa icon="plus" ></fa></button>
-                        </div>
-                    </div>
-                    <div class="table-holder t-shadow-md mt-2 t-overflow-x-auto">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                <th class="bg-secondary text-white p-2">Code</th>
-                                <th class="bg-secondary text-white p-2">Subject</th>
-                                <th class="bg-secondary text-white p-2">Semester</th>
-                                <th class="bg-secondary text-white p-2">Laboratory</th>
-                                <th class="bg-secondary text-white p-2">Year Level</th>
-                                <th class="bg-secondary text-white p-2">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="load in loadData" :key="load.id" >
-                                    <td class="text-uppercase">{{ load.code }}</td>
-                                    <td class="text-capitalize">{{ load.subject }}</td>
-                                    <td class="text-capitalize">{{ load.semester }}</td>
-                                    <td class="text-capitalize">
-                                        <fa v-if="load.laboratory == 1" icon="circle-check" class="text-success"></fa>&nbsp;
-                                        <fa v-else icon="times-circle" class="text-danger"></fa>
-                                    </td>
-                                    <td class="text-capitalize">{{ load.yearlevel }}</td>
-                                    <td class="">
-                                        <button @click="deleteLoad({id:load.id , professor:load.professor})" class="btn btn-outline-danger" > <fa icon="trash"></fa></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </template>
 <script setup >
 import { ref, defineAsyncComponent , computed, inject } from 'vue';

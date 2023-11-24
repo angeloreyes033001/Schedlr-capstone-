@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <section class="wrapper t-select-none t-h-screen t-relative t-overflow-hidden t-bg-slate-100" >
         <navbar :isColor="true" ></navbar>
         <div class="t-absolute t-h-full t-w-full t-overflow-hidden t-pt-[60px] t-pb-[60px]" >
@@ -71,7 +71,7 @@
             </div>
         </div>
     </section>
-    <!-- Modal -->
+    
     <div class="modal fade" id="sectionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sectionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -236,4 +236,7 @@
     },500);
 }
 
-</script>
+</script> -->
+<template>
+    public section
+</template>

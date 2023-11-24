@@ -8,7 +8,7 @@
                     ADD CLASSROOM
                 </button>
             </div>
-            <div class="table-holder mt-3" >
+            <div v-if="classroomData.length > 0" class="table-holder mt-3" >
                 <div class="t-bg-slate-100 t-p-5 t-rounded-[10px]" >
                     <div class="t-flex t-justify-end t-mb-2" >
                         <div>
@@ -102,6 +102,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div v-else class=" t-justify-center t-items-center t-w-full p-5 t-grid" >
+                <img class="t-w-[700px] t-border-2 t-border-white t-border-b-slate-300" src="../../assets/images/no-data.svg" alt="no-data">
+                <h6 class="text-center t-capitalize t-mt-2" > no record found</h6>
             </div>
         </div>
     </div>

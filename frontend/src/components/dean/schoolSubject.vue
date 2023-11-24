@@ -8,7 +8,7 @@
                     ADD SSUBJECT
                 </button>
             </div>
-            <div class="table-holder mt-3" >
+            <div v-if="subjectData.length > 0" class="table-holder mt-3" >
                 <div class="t-bg-slate-100 t-p-5 t-rounded-[10px]" >
                     <div class="t-flex t-justify-end t-mb-2" >
                         <div>
@@ -140,6 +140,10 @@
                     </div>
                 </div>
             </div>
+            <div v-else class=" t-justify-center t-items-center t-w-full p-5 t-grid" >
+                <img class="t-w-[700px] t-border-2 t-border-white t-border-b-slate-300" src="../../assets/images/no-data.svg" alt="no-data">
+                <h6 class="text-center t-capitalize t-mt-2" > no record found</h6>
+            </div>
         </div>
     </div>
     <!-- modal add -->
@@ -242,9 +246,33 @@
     </div>
 </template>
 <script setup >
-import {ref,computed, inject} from 'vue';
+import {ref,computed, onMounted, inject} from 'vue';
 import Swal from 'sweetalert2';
 import { subjectStore } from '../../services/subjects';
+import { specializationStore } from '../../services/specialization';
+const use_specializationStore = specializationStore();
+
+const globalYearlevelData = inject('globalYearLevelData');
+const yearlevelData = ref(globalYearlevelData);
+
+const globalSpecialization = inject("globalSpecialization");
+const specializationData = ref(globalSpecialization);
+
+const mounted_create_common = async ()=>{
+    try {
+        await use_specializationStore.autocreatecommon();
+        specializationData.value = use_specializationStore.getSpecialization;
+    }catch (error) {
+        console.error(error)
+    }
+}
+onMounted( async()=>{
+    await mounted_create_common();
+})
+
+const use_subjectStore = subjectStore();
+const globalSubjectData = inject('globalSubjectData');
+const subjectData = ref(globalSubjectData);
 
 const isSearch = ref('');
 const isProcess = ref(false);
@@ -315,15 +343,6 @@ const getUpdateData = (data) => {
     }
 }
 
-const globalYearlevelData = inject('globalYearLevelData');
-const yearlevelData = ref(globalYearlevelData);
-
-const globalSpecialization = inject("globalSpecialization");
-const specializationData = ref(globalSpecialization);
-
-const use_subjectStore = subjectStore();
-const globalSubjectData = inject('globalSubjectData');
-const subjectData = ref(globalSubjectData);
 const computed_subject = computed(()=>{
     if(isSearch.value != ''){
         return subjectData.value.filter((subject)=>subject.code.toLowerCase().includes(isSearch.value.toLowerCase()) || subject.subject.toLowerCase().includes(isSearch.value.toLowerCase()) );

@@ -217,84 +217,18 @@ const delete_specialization = (id)=>{
     }
 }
 
-// const createSpecialization = ()=>{
-//     Swal.fire({
-//         title: 'Are you sure?',
-//         text: "You won't be able to revert this!",
-//         icon: 'warning',
-//         showCancelButton: true,
-//         confirmButtonColor: '#3085d6',
-//         cancelButtonColor: '#d33',
-//         confirmButtonText: 'Yes,Save it!'
-//         }).then( async (result) => {
-//         if (result.isConfirmed) {
-//             if(specialization.value != ''){
+const mounted_create_common = async ()=>{
+    try {
+        await use_specializationStore.autocreatecommon();
+        specializationData.value = use_specializationStore.getSpecialization;
+    }catch (error) {
+        console.error(error)
+    }
+}
 
-//                 isProcess.value = true;
-
-//                 await use_specializationStore.create(specialization.value)
-//                 const response = use_specializationStore.getResponse;
-
-//                 if(response.status){
-//                     await use_specializationStore.read();
-//                     specializationData.value = use_specializationStore.getSpecialization;
-//                     specialization.value = '';
-//                     Swal.fire('Success',response.msg,"success");
-//                 }
-//                 else{
-//                     specialization.value = '';
-//                     Swal.fire("Error",response.msg,'error');
-//                 }
-
-//                 isProcess.value = false;
-
-//             }
-//             else{
-//                 Swal.fire('Error!','Please fill the field!','error')
-//             }
-//         }
-//     })
-// }
-
-// const deleteSpecialization = (id)=>{
-//     Swal.fire({
-//         title: 'Are you sure?',
-//         text: "You won't be able to revert this!",
-//         icon: 'warning',
-//         showCancelButton: true,
-//         confirmButtonColor: '#3085d6',
-//         cancelButtonColor: '#d33',
-//         confirmButtonText: 'Yes,Delete it!'
-//     }).then(async(result) => {
-//         if (result.isConfirmed) {
-//             await use_specializationStore.delete(id);
-//             const response = use_specializationStore.getResponse;
-//             if(response.status){
-//                 await use_specializationStore.read();
-//                 specializationData.value = use_specializationStore.getSpecialization;
-//                 Swal.fire('Success',response.msg,'success');
-//             }
-//             else{
-//                 Swal.fire('Error',response.msg,'error');
-//             }
-//         }
-//     })
-// }
-
-
-// const onMountedCreateCommon = async()=>{
-//     try {
-//         isProcess.value = true;
-//         await use_specializationStore.autocreatecommon();
-//         isProcess.value = false;
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
-
-// onMounted(()=>{
-//     onMountedCreateCommon();
-// })
+onMounted( async()=>{
+    await mounted_create_common();
+})
 
 
 </script>

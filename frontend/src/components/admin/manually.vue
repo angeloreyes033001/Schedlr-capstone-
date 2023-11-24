@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="t-h-screen t-w-full t-overflow-hidden t-select-none" >
         <div class="t-h-full t-grid t-grid-cols-[1fr,350px]" >
             <div class="t-overflow-hidden" >
@@ -592,4 +592,7 @@ onMounted(async()=>{
     last_added_department_function()
 })
 
-</script>
+</script> -->
+<template>
+    manually
+</template>

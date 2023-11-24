@@ -1,4 +1,4 @@
-<template >
+<!-- <template >
     <section class="wrapper t-select-none t-h-screen t-relative t-overflow-hidden t-bg-slate-100" >
         <navbar :isColor="true" ></navbar>
         <div class="t-absolute t-h-full t-w-full t-overflow-hidden t-pt-[60px] t-pb-[60px]" >
@@ -80,7 +80,7 @@
             </div>
         </div>
     </section>
-    <!-- modal parts -->
+    
     <div class="modal-wrapper modal fade t-select-none" id="scheduleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -288,4 +288,8 @@ const readprintSchedule = async (data)=>{
         padding: 0 20px;
     }
 }
-</style>
+</style> -->
+
+<template>
+    public professor
+</template>
