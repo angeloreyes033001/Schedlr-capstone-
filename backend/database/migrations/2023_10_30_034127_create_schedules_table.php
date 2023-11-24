@@ -16,13 +16,15 @@ return new class extends Migration
             $table->string("scheduleDay",10);
             $table->tinyInteger("scheduleStart");
             $table->tinyInteger("scheduleEnd");
-            // $table->tinyInteger("scheduleReview")->default(0);
-            $table->string("scheduleStatus",10)->default("regular");
+            $table->string("scheduleWork",10)->default("regular");// regular/overtime
             $table->string("scheduleProfessor",20);
             $table->string("scheduleSubject",20);
             $table->unsignedBigInteger("scheduleClassroom");
             $table->unsignedBigInteger("scheduleSection");
             $table->string("scheduleSemester",20)->default("1st semester");
+            $table->boolean("scheduleStatus")->default(false);
+            $table->boolean("scheduleApproved")->default(false);
+            $table->string('scheduleAcademicYear',10);
             $table->boolean("scheduleSoftDelete")->default(false);
             $table->foreign('scheduleProfessor')->references("professorID")->on('professors')->onDelete('cascade');
             $table->foreign('scheduleSubject')->references("subjectCode")->on('subjects')->onDelete('cascade');

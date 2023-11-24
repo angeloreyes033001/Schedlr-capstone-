@@ -130,19 +130,19 @@ Route::group(['prefix'=>'schedule'],function(){
     Route::post('notify-minor-to-dean',[ScheduleController::class, 'notifyMinorToDean']);
 });
 
-Route::group(['prefix'=>'minor'], function(){
-    Route::get('department/{tokens}',[MinorController::class , 'departments']);
-    Route::post('classroom',[MinorController::class, 'allClassroom']);
-    Route::post('section',[MinorController::class, 'allSection']);
-    Route::get('yearlevel/{department}',[MinorController::class , 'showYearlevels']);
-    Route::get('showsubject/{department}',[MinorController::class , 'showSubjects']);
-    Route::post('showclassroom',[MinorController::class , 'showClassrooms']);
-    Route::get('showsection/{department}',[MinorController::class , 'showSections']);
-    Route::post('create-schedule',[MinorController::class, 'createSchedule']);
-    Route::post('showDelete',[MinorController::class, 'showDelete']);
-    Route::get('delete/{id}',[MinorController::class , 'delete']);
-    Route::get('submitSchedule',[MinorController::class , 'showSections']);
-});
+// Route::group(['prefix'=>'minor'], function(){
+//     Route::get('department/{tokens}',[MinorController::class , 'departments']);
+//     Route::post('classroom',[MinorController::class, 'allClassroom']);
+//     Route::post('section',[MinorController::class, 'allSection']);
+//     Route::get('yearlevel/{department}',[MinorController::class , 'showYearlevels']);
+//     Route::get('showsubject/{department}',[MinorController::class , 'showSubjects']);
+//     Route::post('showclassroom',[MinorController::class , 'showClassrooms']);
+//     Route::get('showsection/{department}',[MinorController::class , 'showSections']);
+//     Route::post('create-schedule',[MinorController::class, 'createSchedule']);
+//     Route::post('showDelete',[MinorController::class, 'showDelete']);
+//     Route::get('delete/{id}',[MinorController::class , 'delete']);
+//     Route::get('submitSchedule',[MinorController::class , 'showSections']);
+// });
 
 Route::group(['prefix'=>"public"],function(){
     Route::get('showProfessor/{department}', [publicController::class, 'showProfessor']);
