@@ -11,6 +11,7 @@ use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearLevelController;
+use App\Http\Controllers\OfficialTimeController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix'=>'departments'],function(){
@@ -96,23 +97,19 @@ Route::group(['prefix'=>'professors'], function(){
 });
 
 Route::group(['prefix'=>"loads"], function(){
-    // Route::post('create',[LoadController::class, 'create']);
-    // Route::get('read/{professor}',[LoadController::class, 'read']);
-    // Route::get('delete/{id}',[LoadController::class, 'delete']);
-    // Route::post('all-load',[LoadController::class,'show_subject_assigned']);
     Route::get('read_load_professor/{tokens}',[LoadController::class, 'read_load_professor']);
     Route::post('read_all_load',[LoadController::class,'read_all_load']);
     Route::get('delete_load/{id}',[LoadController::class, 'delete_load']);
     Route::post('create_load',[LoadController::class,'create_load']);
 });
 
-// Route::group(['prefix'=>'officialtime'],function(){
-//     Route::post('create',[OfficialtimeController::class, 'create']);
-//     Route::post('read',[OfficialtimeController::class, 'read']);
-//     Route::post('update',[OfficialtimeController::class, 'update']);
-//     Route::get('delete/{id}',[OfficialtimeController::class, 'delete']);
-//     Route::post('showDelete',[OfficialtimeController::class, 'showDelete']);
-// });
+Route::group(['prefix'=>'officialtime'],function(){
+    Route::post('create',[OfficialTimeController::class, 'create']);
+    Route::post('read',[OfficialTimeController::class, 'read']);
+    Route::post('update',[OfficialTimeController::class, 'update']);
+    Route::get('delete/{id}',[OfficialTimeController::class, 'delete']);
+    Route::post('showDelete',[OfficialTimeController::class, 'showDelete']);
+});
 
 // Route::group(['prefix'=>'schedule'],function(){
 //     Route::post('professor', [ScheduleController::class , 'professorSchedule']);

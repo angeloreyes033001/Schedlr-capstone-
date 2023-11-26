@@ -24,7 +24,7 @@ import {departmentStore} from '../services/departments';
 import {yearlevelStore} from '../services/yearLevels.js';
 import { classroomStore } from '../services/classrooms';
 import { subjectStore } from '../services/subjects';
-import { sectionStore } from '../services/sections';
+// import { sectionStore } from '../services/sections';
 import { professorStore } from '../services/professors';
 import {rankStore } from '../services/ranks.js';
 const sidebarComponent = defineAsyncComponent(()=>import('./partials/sidebar.vue'))
@@ -35,7 +35,7 @@ const use_rankStore = rankStore();
 const use_classroomStore = classroomStore();
 const use_subjectStore = subjectStore();
 const use_professorStore = professorStore();
-const use_sectionStore = sectionStore();
+// const use_sectionStore = sectionStore();
 
 const activeRequests = ref(0);
 const computingLoading = computed(() => {
@@ -124,14 +124,14 @@ const globalFetchSubject = async ()=>{
     endRequest();
 }
 
-const globalSectionData = ref([]);
-const globalFetchSection = async ()=>{
-    startRequest()
-    await use_sectionStore.read();
-    const response = use_sectionStore.getSections;
-    globalSectionData.value = response;
-    endRequest();
-}
+// const globalSectionData = ref([]);
+// const globalFetchSection = async ()=>{
+//     startRequest()
+//     await use_sectionStore.read();
+//     const response = use_sectionStore.getSections;
+//     globalSectionData.value = response;
+//     endRequest();
+// }
 
 const globalProfessorData = ref([]);
 const globalFetchProfessor = async ()=>{
@@ -148,7 +148,7 @@ onMounted(()=>{
     globalFetchRank();
     globalFetchClassroom();
     globalFetchSubject();
-    globalFetchSection();
+    // globalFetchSection();
     globalFetchProfessor();
     // initialComponent();
 })
@@ -158,6 +158,6 @@ provide("globalYearLevelData", globalYearLevelData);
 provide("globalRankData", globalRankData);
 provide("globalClassroomData", globalClassroomData);
 provide("globalSubjectData", globalSubjectData);
-provide("globalSectionData", globalSectionData);
+// provide("globalSectionData", globalSectionData);
 provide("globalProfessorData", globalProfessorData);
 </script>
