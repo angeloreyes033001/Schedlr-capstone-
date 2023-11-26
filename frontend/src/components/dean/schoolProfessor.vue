@@ -3,7 +3,7 @@
         <h3 class="text-muted t-font-black" >Professor</h3>
         <div class="t-mt-3" >
             <div class="t-flex t-justify-end" >
-                <button :disabled="isProcess || isEditMode !='' ||isSelectLoad != ''" class="btn btn-outline-primary w-25" data-bs-toggle="modal" data-bs-target="#addModal" >
+                <button :disabled="isProcess || isEditMode !=''" class="btn btn-outline-primary w-25" data-bs-toggle="modal" data-bs-target="#addModal" >
                     <fa icon="plus" ></fa>
                     ADD PROFESSOR
                 </button>
@@ -12,28 +12,28 @@
             <div class="t-bg-slate-100 t-p-5 t-rounded-[10px]" >
                 <div class="t-flex t-justify-between t-mb-2 t-pb-2 t-border t-border-t-slate-100 t-border-l-slate-100 t-border-r-slate-100 t-border-b-slate-300" >
                     <div class="t-flex t-gap-1" >
-                        <button @click="change_tab('list')" :disabled="isProcess || isEditMode !='' ||isSelectLoad != ''" class="btn t-w-[150px]" :class="{'btn-primary': isSelectedTab ==='list'}" >
+                        <button @click="change_tab('list')" :disabled="isProcess || isEditMode !=''" class="btn t-w-[150px]" :class="{'btn-primary': isSelectedTab ==='list'}" >
                             <fa icon="list" ></fa>
                             &nbsp;
                             List
                         </button>
-                        <button @click="change_tab('assigned')" :disabled="isProcess || isEditMode !='' ||isSelectLoad != ''" class="btn t-w-[150px]" :class="{'btn-primary': isSelectedTab ==='assigned'}" >
+                        <button @click="change_tab('assigned')" :disabled="isProcess || isEditMode !=''" class="btn t-w-[150px]" :class="{'btn-primary': isSelectedTab ==='assigned'}" >
                             <fa icon="check" ></fa>
                             &nbsp;
-                            Assigned
+                            Assign
                         </button>
                     </div>
                     <div >
-                        <input v-show="isSelectedTab === 'list'" v-model="isSearch" :disabled="isProcess || isEditMode !='' " class="form-control t-capitalize" placeholder="Search" type="text" >
+                        <input v-model="isSearch" :disabled="isProcess || isEditMode !='' " v-if="isSelectedTab == 'list'"  class="form-control t-capitalize" placeholder="Search" type="text" >
                     </div>
                 </div>
                 <div>
-                    <div v-show="isSelectedTab === 'list'" class="t-grid t-grid-cols-1" :class="{'t-grid-cols-[620px,1fr]': isSelectLoad != ''}" >
+                    <div v-show="isSelectedTab === 'list'" >
                         <!-- list div -->
                         <div class="t-inline-block" >
                             <div v-if="professorData.length > 0" v-for="professor in computed_professor" class="t-bg-white t-w-[300px] t-shadow t-h-auto t-inline-block t-m-1" >
                                 <div class="t-grid t-rounded-[10px] parent-white t-w-full" >
-                                    <div :class="{'t-bg-logoOrange':isSelectLoad == professor.professorID}" class="t-bg-logoBlue t-p-2 t-rounded-[10px] t-grid t-grid-cols-[80px,1fr] t-w-full" >
+                                    <div  class="t-bg-logoBlue t-p-2 t-rounded-[10px] t-grid t-grid-cols-[80px,1fr] t-w-full" >
                                         <div class="t-flex t-justify-center t-items-center t-p-2" >
                                             <img src="../../assets/images/profile.png" class="t-bg-white t-rounded-[50%]" >
                                         </div>
@@ -91,15 +91,7 @@
                                                 </div>
                                             </div>
                                         </span>
-                                        <div class="t-grid t-grid-cols-[1fr,50px,50px] t-gap-1 t-mt-1 t-p-1" >
-                                            <button v-if="isSelectLoad != professor.professorID" @click="select_view_load(professor.professorID)" :disabled="isProcess || isEditMode !=''" class="btn btn-primary" >
-                                                <fa icon="scroll" ></fa>
-                                                <label for="">&nbsp;Show Load</label>
-                                            </button>
-                                            <button  v-else @click="remove_view_load()" :disabled="isProcess || isEditMode !=''" class="btn btn-primary" >
-                                                <fa icon="scroll" ></fa>
-                                                <label for="">&nbsp;Hide Load</label>
-                                            </button>
+                                        <div class="t-grid t-grid-cols-2 t-gap-1 t-mt-1 t-p-1" >
                                             <button  @click="getUpdateData(
                                                 {
                                                     professorID: professor.professorID,
@@ -108,13 +100,13 @@
                                                     rank: professor.rankID,
                                                     designation: professor.designation
                                                 }
-                                                )" :disabled="isProcess || isSelectLoad != ''" class="btn btn-outline-secondary" >
+                                                )" :disabled="isProcess " class="btn btn-outline-secondary" >
                                                 <fa icon="edit" ></fa>
                                             </button>
-                                            <button v-if="isEditMode == ''" @click="delete_professor(professor.professorID)" :disabled="isProcess ||isSelectLoad != ''" class="btn btn-outline-danger" >
+                                            <button v-if="isEditMode == ''" @click="delete_professor(professor.professorID)" :disabled="isProcess" class="btn btn-outline-danger" >
                                                 <fa icon="trash" ></fa>
                                             </button>
-                                            <button v-else @click="update_professor" :disabled="isProcess ||isSelectLoad != ''" class="btn btn-outline-primary" >
+                                            <button v-else @click="update_professor" :disabled="isProcess" class="btn btn-outline-primary" >
                                                 <fa icon="save" ></fa>
                                             </button>
                                         </div>
@@ -126,119 +118,166 @@
                                 <h6 class="text-center t-capitalize t-mt-2" > no record found</h6>
                             </div>
                         </div>
-                        <div class="" v-show="isSelectLoad != ''" >
-                            <div class="t-flex" >
-                                <form @submit.prevent="create_load" class="t-flex t-gap-2" >
-                                    <div class="form-group" >
-                                        <select v-model="loads.subject" class="form-select" >
-                                            <option disabled value="" >Select Subject</option>
-                                            <option v-for="sub in globalSubjectData" :value="sub.code" >{{ sub.code }}</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-primary" >
-                                            <fa icon="plus" ></fa>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="table-holder" >
-                                <div class="t-bg-slate-100 t-p-1 t-rounded-[10px]" >
-                                    <div class="t-h-[60px] t-bg-logoBlue t-p-2 t-rounded-tl-[10px] t-rounded-tr-[10px] t-grid t-grid-cols-6">
-                                        <div class="t-h-full" >
-                                            <div class="t-flex t-items-center t-h-full" >
-                                                <label class="t-uppercase t-text-white t-font-bold t-truncate" >Code</label>
-                                            </div>
-                                        </div>
-                                        <div class="t-h-full" >
-                                            <div class="t-flex t-items-center t-h-full" >
-                                                <label class="t-uppercase t-text-white t-font-bold t-truncate" >Subject</label>
-                                            </div>
-                                        </div>
-                                        <div class="t-h-full" >
-                                            <div class="t-flex t-items-center t-h-full" >
-                                                <label class="t-uppercase t-text-white t-font-bold t-truncate" >Lec Hour's</label>
-                                            </div>
-                                        </div>
-                                        <div class="t-h-full" >
-                                            <div class="t-flex t-items-center t-h-full" >
-                                                <label class="t-uppercase t-text-white t-font-bold t-truncate" >Lab Hour's</label>
-                                            </div>
-                                        </div>
-                                        <div class="t-h-full" >
-                                            <div class="t-flex t-items-center t-h-full" >
-                                                <label class="t-uppercase t-text-white t-font-bold t-truncate" >Year</label>
-                                            </div>
-                                        </div>
-                                        <div class="t-h-full" >
-                                            <div class="t-flex t-items-center t-h-full" >
-                                                <label class="t-uppercase t-text-white t-font-bold t-truncate" >Action</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div  class="t-grid t-grid-cols-6 t-h-[50px] t-bg-slate-50 t-rounded-[5px] t-mt-2 t-mb-1 t-p-2 t-border"
-                                    v-for="load in loadData"  >
-                                        <div class="t-flex t-items-center t-h-full" >
-                                            <label class="t-uppercase t-font-normal text-muted" >{{ load.code }}</label>
-                                        </div>
-                                        <div class="t-flex t-items-center t-h-full" >
-                                            <label class="t-capitalize t-font-normal text-muted  t-truncate" :title="load.subject" >{{ load.subject }}</label>
-                                        </div>
-                                        <div class="t-flex t-items-center t-h-full" >
-                                            <label class="t-capitalize t-font-normal text-muted" >{{ load.lecture }}</label>
-                                        </div>
-                                        <div class="t-flex t-items-center t-h-full" >
-                                            <label class="t-capitalize t-font-normal text-muted" >{{ load.laboratory }}</label>
-                                        </div>
-                                        <div class="t-flex t-items-center t-h-full" >
-                                            <label class="t-capitalize t-font-normal text-muted" >{{ load.year }}</label>
-                                        </div>
-                                        <div class="t-flex t-gap-3 t-items-center t-h-full" >
-                                            <!-- <button @click="setData({id: section.id , section: section.section , yearlevel: section.yearID,specialization: section.specializationID })" data-bs-toggle="modal" data-bs-target="#editModal" >
-                                                <fa icon="edit" class="t-text-[18px] t-font-semibold t-text-slate-400 hover:t-text-slate-200" ></fa>
-                                            </button> -->
-                                            <button  @click="delete_load(load.id,load.professor)" class="" >
-                                                <fa icon="trash" class="t-text-[18px] t-font-semibold t-text-red-400 hover:t-text-red-200" ></fa>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!-- assigned -->
                     <div  v-show="isSelectedTab === 'assigned'" class="t-w-full" >
-                        <div class="t-flex t-justify-end" >
-                            <div class="form-group" >
-                                <select v-model="semester_load" @change="show_all_load" class="form-select" >
-                                    <option value="1st semester">1st Semester</option>
-                                    <option value="2nd semester">2nd Semester</option>
-                                </select>
+                        <div class="" >
+                            <div class="t-mb-3" >
+                                <div class="" >
+                                    <div>
+                                        <input class="form-control" placeholder="Search" v-model="isSearchAssigned" >
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div v-for="assigned in assignedData" class="t-w-full" >
-                            <h5 class="t-font-bold text-muted t-uppercase" >{{ assigned.year }}</h5>
-                            <div class="t-flex t-flex-row t-flex-wrap t-gap-3 t-w-full" >
-                                <div v-for="subject in assigned.subjects" :key="subject.code" class="" >
-                                    <div class="t-h-full t-w-[300px] t-rounded-[10px] t-bg-slate-200 p-3 " >
-                                        <div class="t-border t-border-b-slate-300" >
-                                            <h6 class="t-font-bold t-uppercase" >{{ subject.code }}</h6>
+                            <div v-for="professor in computed_read_load_professorData" :class="{'t-bg-slate-300/50 t-shadow': isOpenLoad === professor.info.professorID, 't-bg-white': isOpenLoad != professor.info.professorID}" class=" t-rounded-[10px] t-p-5 t-mt-5 t-mb-5" >
+                                <div class="t-grid t-grid-cols-[100px,1fr]" >
+                                    <div class="t-p-2" >
+                                        <img src="../../assets/images/profile.png" >
+                                    </div>
+                                    <div class="t-flex t-items-center" >
+                                        <div>
+                                            <div class="t-grid t-grid-cols-[130px,1fr]" >
+                                                <span class="t-text-[14px]" >Professor:</span>
+                                                <span class="t-capitalize t-text-[14px]" >{{professor.info.fullname}}</span>
+                                            </div>
+                                            <div class="t-grid t-grid-cols-[130px,1fr]" >
+                                                <span class="t-text-[14px]" >Rank:</span>
+                                                <span class="t-capitalize t-text-[14px]" >{{professor.info.rank}}</span>
+                                            </div>
+                                            <div class="t-grid t-grid-cols-[130px,1fr]" >
+                                                <span class="t-text-[14px]" >Designated:</span>
+                                                <span class="t-capitalize t-text-[14px]" >{{professor.info.designated}}</span>
+                                            </div>
+                                            <div class="t-grid t-grid-cols-[130px,1fr]" >
+                                                <span class="t-text-[14px]" >Hour's:</span>
+                                                <span class="t-capitalize t-text-[14px]" >{{professor.info.hour}}</span>
+                                            </div>
                                         </div>
-                                        <div v-if="subject.professors.length > 0" >
-                                            <div v-for="professor in subject.professors" >
-                                                <div class="t-grid t-grid-cols-[0.7fr,1fr]" >
-                                                    <small class="t-uppercase" >{{ professor.professorID }}</small>
-                                                    <small class="t-capitalize" >{{ professor.fullname }}</small>
+                                        
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="t-bg-white t-p-5 t-rounded-[10px]" >
+                                    <h6 class="t-font-bold text-muted" >LOAD</h6>
+                                    <div class="table_holder " >
+                                        <div class="t-h-[40px] t-bg-slate-200 t-grid t-grid-cols-3" >
+                                            <span class="t-flex t-items-center t-pl-[10px] t-font-bold" >Subject</span>
+                                            <span class="t-flex t-items-center t-pl-[10px] t-font-bold" >Hour</span>
+                                            <span class="t-flex t-items-center t-pl-[10px] t-font-bold" >Action</span>
+                                        </div>
+                                        <div v-if="professor.loads.length > 0" v-for="load in professor.loads" class="t-h-[50px] t-grid t-grid-cols-3" >
+                                            <span class="t-flex t-items-center t-pl-[10px] t-font-extralight" >{{ load.subject }}</span>
+                                            <span class="t-flex t-items-center t-pl-[10px] t-font-extralight" >{{ load.hour }}</span>
+                                            <span class="t-flex t-items-center t-pl-[10px] t-font-extralight" >
+                                                <button @click="delete_load(load.id)" class="btn btn-danger" >
+                                                    <fa icon="trash" ></fa>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div v-else class="t-h-[50px]" >
+                                            <div class="t-flex t-h-full t-items-center t-justify-center t-pl-[10px] t-font-extralight" >
+                                                <b>NO LOAD RECORD</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="" >
+                                    <div class="t-flex t-justify-end" >
+                                        <button @click="selectLoadProfessor(professor.info.professorID)"  class="btn btn-primary w-25" >
+                                            <fa icon="gears" ></fa>
+                                            Assign Load
+                                        </button>
+                                    </div>
+                                    <!--  v-show="isOpenLoad == professor.info.professorID " -->
+                                    <div v-show="isOpenLoad == professor.info.professorID" class=" t-mt-2 t-bg-white t-p-5 t-rounded-[10px]" >
+                                        <div class="t-flex t-justify-between t-mb-2" >
+                                            <div class="form-group" >
+                                                <input class="form-control" placeholder="Search Subject" >
+                                            </div>
+                                            <div class="t-flex t-gap-2" >
+                                                <div class="form-group" >
+                                                    <select @change="read_all_load" v-model="loads.year" :disabled="isProcess" class="form-select" >
+                                                        <option value="" selected disabled >Select Year</option>
+                                                        <option class="t-capitalize" v-for="year in globalYearLevelData" :value="year.id" >{{ year.year }}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" >
+                                                    <select  @change="read_all_load" v-model="loads.semester" :disabled="isProcess" class="form-select" >
+                                                        <option value="1st semester" >1st Semester</option>
+                                                        <option value="2nd semester" >2nd Semester</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div v-else >
-                                            <i class="t-text-[14px] t-text-gray-400" >No Professor</i>
+                                        <hr>
+                                        <div classroom="table_holder" >
+                                            <div v-for="info in computed_all_loadData" >
+                                                <h6 class="t-font-bold text-muted t-capitalize" >{{info.subject}}(<span class="t-uppercase t-font-extralight" >{{ info.code }}</span>)</h6>
+                                                <div class="t-grid t-grid-cols-2 t-gap-2" >
+                                                    <div>
+                                                        <div class="t-flex t-justify-end" >
+                                                            <form @submit.prevent="create_load(info.code)" class="t-flex t-gap-2 t-mt-2 t-mb-2"  v-if="info.subjectCurrentHour != info.subjectMaxHour" >
+                                                                <div class="form-group" >
+                                                                    <input v-model="loads.hour" class="form-control" placeholder="Hour" min="0" max="30" type="number" >
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary" >
+                                                                    <fa icon="save" ></fa>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                        <div class="t-bg-logoBlue t-h-[50px] t-grid t-grid-cols-2" >
+                                                            <div class="t-flex t-items-center t-h-full t-pl-[10px] t-text-white" >
+                                                                Fullname
+                                                            </div>
+                                                            <div class="t-flex t-items-center t-h-full t-pl-[10px] t-text-white" >
+                                                                Hour
+                                                            </div>
+                                                        </div>
+                                                        <div v-for="load in info.loads" class="t-h-[50px] t-grid t-grid-cols-2 t-bg-slate-100" >
+                                                            <div class="t-flex t-items-center t-h-full t-pl-[10px]" >
+                                                                <h6 class="t-capitalize" >{{load.fullname}}</h6>
+                                                            </div>
+                                                            <div class="t-flex t-items-center t-h-full t-pl-[10px]" >
+                                                                <h6 class="" >{{load.hour}}</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="t-grid t-grid-cols-2" >
+                                                        <div>
+                                                            <div class="t-flex t-items-center t-justify-center" >
+                                                                <div class=" t-rounded-[50%] t-p-5" :class="{'t-bg-red-300': info.professorCurrentHour < info.professorMaxHour,'t-bg-green-300': info.professorCurrentHour >= info.professorMaxHour}" >
+                                                                    <div class="t-h-[120px] t-p-5 t-w-[120px] t-flex t-justify-center t-items-center t-rounded-[50%]" :class="{'t-bg-red-200': info.professorCurrentHour < info.professorMaxHour,'t-bg-green-200': info.professorCurrentHour >= info.professorMaxHour}" >
+                                                                        <div class="t-flex t-justify-center t-items-center t-w-full t-h-full t-rounded-[50%] " :class="{'t-bg-red-100': info.professorCurrentHour < info.professorMaxHour,'t-bg-green-100': info.professorCurrentHour >= info.professorMaxHour}" >
+                                                                            <span class="t-font-bolder t-text-[25px] t-text-black/50" >{{info.professorCurrentHour}}/<b>{{ info.professorMaxHour }}</b></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <h6 class="t-text-center t-text-extralight t-text-[14px] t-mt-3" >Professor Hour's</h6>
+                                                        </div>
+                                                        <div>
+                                                            <div class="t-flex t-items-center t-justify-center" >
+                                                                <div class=" t-rounded-[50%] t-p-5" :class="{'t-bg-red-300': info.subjectCurrentHour < info.subjectMaxHour,'t-bg-green-300': info.subjectCurrentHour >= info.subjectMaxHour}" >
+                                                                    <div class="t-h-[120px] t-p-5 t-w-[120px] t-flex t-justify-center t-items-center t-rounded-[50%]" :class="{'t-bg-red-200': info.subjectCurrentHour < info.subjectMaxHour,'t-bg-green-200': info.subjectCurrentHour >= info.subjectMaxHour}" >
+                                                                        <div class="t-flex t-justify-center t-items-center t-w-full t-h-full t-rounded-[50%] " :class="{'t-bg-red-100': info.subjectCurrentHour < info.subjectMaxHour,'t-bg-green-100': info.subjectCurrentHour >= info.subjectMaxHour}" >
+                                                                            <span class="t-font-bolder t-text-[25px] t-text-black/50" >{{info.subjectCurrentHour}}/<b>{{ info.subjectMaxHour }}</b></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <h6 class="t-text-center t-text-extralight t-text-[14px] t-mt-3" >Subject Hour's</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -320,13 +359,7 @@ const use_professorStore = professorStore();
 const globalProfessorData = inject("globalProfessorData");
 const globalRankData = inject('globalRankData');
 const professorData = ref(globalProfessorData);
-
-const use_loadStore = loadStore();
-const loadData = ref([]);
-const loads = ref({
-    professor: '',
-    subject: ''
-})
+const globalYearLevelData = inject('globalYearLevelData');
 
 const globalSubjectData = inject('globalSubjectData');
 const globalDesignationData = inject('globalDesignationData');
@@ -345,20 +378,13 @@ const computed_professor = computed(()=>{
 const isProcess = ref(false);
 const isSearch = ref('');
 
-const isSelectLoad = ref('');
-const select_view_load = (professorID)=>{
-    isSelectLoad.value = professorID;
-    read_load(professorID)
-}
-const remove_view_load = ()=>{
-    isSelectLoad.value = "";
-}
+const isSearchAssigned = ref('');
 
 const isSelectedTab = ref('list');
-const change_tab = (tab) =>{
+const change_tab = async (tab) =>{
     isSelectedTab.value = tab;
     if(isSelectedTab.value != 'list'){
-        show_all_load(semester_load.value);
+        read_load_professor()
     }
 }
 
@@ -533,37 +559,30 @@ const delete_professor = (id)=>{
     }
 }
 
-const create_load = ()=>{
-    try {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes,Save it!"
-        }).then(async(result) => {
-            
-            isProcess.value = true;
 
-            await use_loadStore.create({...loads.value});
-            const response = use_loadStore.getResponse;
-            
-            if(response.status){
-                read_load(loads.value.professor);
-                Swal.fire("Success",response.msg,'success');
-            }
-            else{
-                Swal.fire("Error",response.msg,"error");
-            }
+// loaddddddddd --------------------------------------
 
-            isProcess.value = false;
 
-        });
+const use_loadStore = loadStore();
+const loadData = ref([]);
+const loads = ref({
+    year: '',
+    semester: '1st semester',
+    professor: '',
+    subject: '',
+    hour: 0,
+});
 
-    } catch (error) {
-        console.error(error);
+const isOpenLoad = ref('');
+
+const selectLoadProfessor = (professor)=>{
+    if(isOpenLoad.value === professor){
+        isOpenLoad.value = "";
+        loads.value.professor = "";
+    }else{
+        isOpenLoad.value = professor;
+        loads.value.professor = professor;
+        read_all_load();
     }
 }
 
@@ -582,21 +601,88 @@ const read_load = async (professorID)=>{
     }
 }
 
-const assignedData = ref([]);
-const semester_load = ref('1st semester');
-const show_all_load = async()=>{
+
+const read_load_professorData = ref([]);
+
+const computed_read_load_professorData = computed(()=>{
+    if(isSearchAssigned.value != ''){
+        return read_load_professorData.value.filter((item)=>item.info.fullname.toLowerCase().includes(isSearchAssigned.value.toLowerCase()));
+    }
+    else{
+        return read_load_professorData.value;
+    }
+})
+
+const create_load = (subject)=>{
+    try{
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes,Save it!"
+        }).then(async(result) => {
+             await use_loadStore.create_load({
+                year: loads.value.year,
+                semester: loads.value.semester,
+                professor: loads.value.professor,
+                subject: subject,
+                hour: loads.value.hour,
+             });
+
+             const response = use_loadStore.getResponse;
+             if(response.status){
+                loads.value.hour = 0;
+                Swal.fire('Success',response.msg,"success");
+                read_all_load();
+             }
+             else{
+                Swal.fire("Error",response.msg,"error");
+             }
+
+
+        });
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+const read_all_loadData= ref([]);
+const computed_all_loadData = computed(()=>{
+    return read_all_loadData.value;
+})
+const read_all_load = async()=>{
     try {
         isProcess.value = true;
-        await use_loadStore.show_all(semester_load.value);
-        const response = use_loadStore.getResponse;
-        assignedData.value = response;
+        await use_loadStore.read_all_load({
+            year: loads.value.year,
+            semester: loads.value.semester,
+            professor: loads.value.professor,
+        });
+        read_all_loadData.value = use_loadStore.getResponse;
         isProcess.value = false;
     } catch (error) {
         console.error(error);
     }
 }
 
-const delete_load = (id,professorID)=>{
+const read_load_professor = async()=>{
+    try {
+        isProcess.value = true;
+
+        await use_loadStore.read_load_professor();
+        read_load_professorData.value = use_loadStore.getResponse;
+
+        isProcess.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const delete_load = async(id)=>{
     try {
         Swal.fire({
             title: "Are you sure?",
@@ -606,153 +692,22 @@ const delete_load = (id,professorID)=>{
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes,Delete it!"
-        }).then( async (result) => {
+        }).then(async(result) => {
             if (result.isConfirmed) {
-                await use_loadStore.delete(id);
+                isProcess.value = true;
+                await use_loadStore.delete_load(id)
                 const response = use_loadStore.getResponse;
                 if(response.status){
-                    await use_loadStore.read(professorID);
-                    loadData.value = use_loadStore.getLoad;
-                    Swal.fire("Success",response.msg,'success');
+                    read_load_professor();
+                    Swal.fire("Success",response.msg,"success")
                 }
+                isProcess.value = false;
             }
         });
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 }
-
-
-// const options = ref('');
-// const showOption = (id)=>{
-//     if(options.value != ''){
-//         options.value = ""
-//     }
-//     else{
-//         options.value = id;
-//     }
-// }
-
-
-// const createProfessor = ()=>{
-//     try {
-//         Swal.fire({
-//             title: 'Are you sure?',
-//             text: "You won't be able to revert this!",
-//             icon: 'warning',
-//             showCancelButton: true,
-//             confirmButtonColor: '#3085d6',
-//             cancelButtonColor: '#d33',
-//             confirmButtonText: 'Yes, Save it!'
-//         }).then( async (result) => {
-//             if (result.isConfirmed) {
-//                 //remove error message
-//                 professors.value.id_error = "";
-//                 professors.value.fullname_error = "";
-//                 professors.value.status_error = "";
-//                 professors.value.rank_error = "";
-//                 professors.value.designation_error ="";
-//                 await use_professorStore.create({
-//                     id: professors.value.id,
-//                     fullname: professors.value.fullname,
-//                     status: professors.value.status,
-//                     rank: professors.value.rank,
-//                     designation: professors.value.designation,
-//                 });
-//                 const response = use_professorStore.getResponse;
-//                 if(response.status){
-//                     await use_professorStore.read();
-//                     professorData.value = use_professorStore.getProfessor;
-//                     Swal.fire("Success", response.msg, "success");
-//                     reset();
-//                 }
-//                 else{
-//                     if(response.error == "id"){
-//                         professors.value.id_error = response.msg;
-//                     }
-
-//                     if(response.error == "fullname"){
-//                         professors.value.fullname_error = response.msg;
-//                     }
-
-//                     if(response.error == "status"){
-//                         professors.value.status_error = response.msg;
-//                     }
-
-//                     if(response.error == "rank"){
-//                         professors.value.rank_error = response.msg;
-//                     }
-
-//                     if(response.error == "designation"){
-//                         professors.value.designation_error = response.msg;
-//                     }
-//                 }
-//             }
-//         })
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
-
-
-// const loads = ref({
-//     subject: '',
-// })
-
-// const createLoad = async (professor)=>{
-//     // const professor = data[0]['professor'];
-//     const subject = loads.value.subject;
-//     await use_loadStore.create({professor: professor , subject: subject });
-//     const response = use_loadStore.getResponse;
-//     if(response.status){
-//         await use_loadStore.read(professor);
-//         loadData.value = use_loadStore.getLoad;
-//         loads.value.subject = '';
-//         Swal.fire("Success", response.msg,"success");
-//     }
-//     else{
-//         Swal.fire("Error", response.msg,"error");
-//     }
-// }
-// const selectedProfessor = ref();
-// const readLoad = async (id)=>{
-//     try{
-//         await use_loadStore.read(id);
-//         loadData.value = use_loadStore.getLoad;
-//         selectedProfessor.value = id;
-//     }
-//     catch(error){
-//         console.error(error);
-//     }
-// }
-
-// const deleteLoad = async (data)=>{
-//     try{
-//         Swal.fire({
-//             title: 'Are you sure?',
-//             text: "You won't be able to revert this!",
-//             icon: 'warning',
-//             showCancelButton: true,
-//             confirmButtonColor: '#3085d6',
-//             cancelButtonColor: '#d33',
-//             confirmButtonText: 'Yes, delete it!'
-//         }).then( async (result) => {
-//             if (result.isConfirmed) {
-//                 const { id , professor } = data;
-//                 await use_loadStore.delete(id);
-//                 const response = use_loadStore.getResponse;
-//                 if(response.status){
-//                     await use_loadStore.read(professor);
-//                     loadData.value = use_loadStore.getLoad;
-//                     Swal.fire("Success", response.msg,"success");
-//                 }
-//             }
-//         })
-//     }
-//     catch(error){
-//         console.error(error);
-//     }
-// }
 
 </script>
 <style scoped>

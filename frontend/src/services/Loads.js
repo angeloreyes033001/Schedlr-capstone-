@@ -7,31 +7,37 @@ export const loadStore = defineStore('loads', {
         response: '',
     })),
     actions: {
-        async create(data){
-            const formData = new FormData();
-            formData.append('professor', data.professor);
-            formData.append('subject',data.subject);
-            formData.append('tokens', localStorage.getItem('tokens'));
+        async read_load_professor(){
+            const tokens = localStorage.getItem('tokens');
+            const response = await apiRequest.get(`/api/loads/read_load_professor/${tokens}`);
+            this.response = response;
+        },
+        async delete_load(id){
+            const response = await apiRequest.get(`/api/loads/delete_load/${id}`);
+            this.response = response;
+        },
 
-            const response = await apiRequest.post('/api/loads/create', formData);
-            this.response = response;
-        },
-        async read(id){
-            const response = await apiRequest.get(`/api/loads/read/${id}`);
-            this.loads = response;
-        },
-        async delete(id){
-            const response = await apiRequest.get(`/api/loads/delete/${id}`);
-            this.response = response;
-        },
-        async show_all(semester){
+        async read_all_load(data){
             const formData = new FormData();
-            formData.append('semester',semester);
+            formData.append('year',data.year);
+            formData.append('semester',data.semester);
+            formData.append('professor',data.professor);
             formData.append('tokens',localStorage.getItem('tokens'));
 
-            const response = await apiRequest.post(`/api/loads/all-load`,formData);
+            const response = await apiRequest.post('/api/loads/read_all_load',formData);
             this.response = response;
-            // console.log(semester)
+        },
+
+        async create_load(data){
+            const formData = new FormData();
+            formData.append('year',data.year);
+            formData.append('semester',data.semester);
+            formData.append('professor',data.professor);
+            formData.append('subject',data.subject);
+            formData.append('hour',data.hour);
+            formData.append('tokens',localStorage.getItem('tokens'));
+            const response = await apiRequest.post('/api/loads/create_load',formData);
+            this.response = response;
         }
     },
     getters: {

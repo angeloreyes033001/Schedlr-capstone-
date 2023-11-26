@@ -147,14 +147,14 @@ const globalFetchClassroom = async ()=>{
     endRequest();
 }
 
-// const globalSubjectData = ref([]);
-// const globalFetchSubject = async ()=>{
-//     startRequest();
-//     await use_subjectStore.read();
-//     const response = use_subjectStore.getSubjects;
-//     globalSubjectData.value = response;
-//     endRequest();
-// }
+const globalSubjectData = ref([]);
+const globalFetchSubject = async ()=>{
+    startRequest();
+    await use_subjectStore.read();
+    const response = use_subjectStore.getSubjects;
+    globalSubjectData.value = response;
+    endRequest();
+}
 
 // const globalSectionData = ref([]);
 // const globalFetchSection = async ()=>{
@@ -165,14 +165,14 @@ const globalFetchClassroom = async ()=>{
 //     endRequest();
 // }
 
-// const globalProfessorData = ref([]);
-// const globalFetchProfessor = async ()=>{
-//     startRequest();
-//     await use_professorStore.read();
-//     const response = use_professorStore.getProfessor;
-//     globalProfessorData.value = response;
-//     endRequest();
-// }
+const globalProfessorData = ref([]);
+const globalFetchProfessor = async ()=>{
+    startRequest();
+    await use_professorStore.read();
+    const response = use_professorStore.getProfessor;
+    globalProfessorData.value = response;
+    endRequest();
+}
 
 onMounted(()=>{
     globalFetchDepartments();
@@ -181,9 +181,9 @@ onMounted(()=>{
     globalFetchDesignation();
     globalFetchSpecialization();
     globalFetchClassroom();
-    // globalFetchSubject();
+    globalFetchSubject();
     // globalFetchSection();
-    // globalFetchProfessor();
+    globalFetchProfessor();
     // initialComponent();
 })
 
@@ -194,9 +194,9 @@ provide("globalRankData", globalRankData);
 provide("globalDesignationData", globalDesignationData);
 provide("globalSpecialization", globalSpecialization);
 provide("globalClassroomData", globalClassroomData);
-// provide("globalSubjectData", globalSubjectData);
+provide("globalSubjectData", globalSubjectData);
 // provide("globalSectionData", globalSectionData);
-// provide("globalProfessorData", globalProfessorData);
+provide("globalProfessorData", globalProfessorData);
 
 
 </script>
