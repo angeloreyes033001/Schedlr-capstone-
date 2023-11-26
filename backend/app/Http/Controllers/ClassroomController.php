@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ClassroomController extends Controller
 {
-
     protected function create(Request $request){
         try{
             $validator = Validator::make($request->all(),[
@@ -32,11 +31,6 @@ class ClassroomController extends Controller
                     return response()->json(['status'=>false, "error"=>"type", "msg"=>$errorMessage]);
                 }
 
-                if($validator->errors()->has('year')){
-                    $errorMessage = $validator->errors()->first('year');
-                    return response()->json(['status'=>false, "error"=>"year", "msg"=>$errorMessage]);
-                }
-
                 if($validator->errors()->has('overwrite')){
                     $errorMessage = $validator->errors()->first('overwrite');
                     return response()->json(['status'=>false, "error"=>"overwrite", "msg"=>$errorMessage]);
@@ -46,12 +40,10 @@ class ClassroomController extends Controller
             $department = $this->tokenDepartment($request->input('tokens'));
 
             $check  = Classroom::join('departments','classroomDepartment','=','department')
-            ->join('year_levels','classroomYearlevel','=','yearlevelID')
             ->where([
                     'classroomName'=>strtolower($request->input('room')), 
                     "classroomDepartment"=>$department,
                     "classroomSoftDelete"=>0,
-                    "yearlevelSoftDelete"=>0,
                     "departmentSoftDelete"=>0
                 ])->count();
 
@@ -62,7 +54,6 @@ class ClassroomController extends Controller
             $save = new Classroom();
             $save->classroomName = strtolower($request->input('room'));
             $save->classroomType = strtolower($request->input('type'));
-            $save->classroomYearlevel = $request->input('year');
             $save->classroomMulti = $request->input('overwrite');
             $save->classroomDepartment = strtolower($department);
             $result = $save->save();
@@ -84,14 +75,12 @@ class ClassroomController extends Controller
             $departments = $this->tokenDepartment($tokens);
             
             $classrooms = Classroom::join('departments','classroomDepartment','=','department')
-            ->join('year_levels','classroomYearlevel','=','yearlevelID')
             ->where([
                 'classroomDepartment'=>$departments,
                 "classroomSoftDelete"=>0,
-                "yearlevelSoftDelete"=>0,
                 'departmentSoftDelete'=>0
             ])
-            ->select(["classroomID as id", "classroomName as room", "classroomType as type","classroomMulti as multi","yearlevelID as year" ,"yearlevel as yearName"])->get();
+            ->select(["classroomID as id", "classroomName as room", "classroomType as type","classroomMulti as multi"])->get();
 
             return response()->json($classrooms);
 
@@ -107,7 +96,6 @@ class ClassroomController extends Controller
                 "id"=>"required|integer",
                 "room"=>"required",
                 "type"=>"required|in:lecture,laboratory",
-                "year"=>"required",
                 "overwrite"=>"required|in:0,1"
             ]);
 
@@ -128,11 +116,6 @@ class ClassroomController extends Controller
                     return response()->json(['status'=>false, "error"=>"type", "msg"=>$errorMessage]);
                 }
 
-                if($validator->errors()->has('year')){
-                    $errorMessage = $validator->errors()->first('year');
-                    return response()->json(['status'=>false, "error"=>"year", "msg"=>$errorMessage]);
-                }
-
                 if($validator->errors()->has('overwrite')){
                     $errorMessage = $validator->errors()->first('overwrite');
                     return response()->json(['status'=>false, "error"=>"overwrite", "msg"=>$errorMessage]);
@@ -140,12 +123,10 @@ class ClassroomController extends Controller
             }
 
             Classroom::join('departments','classroomDepartment','=','department')
-            ->join('year_levels','classroomYearlevel','=','yearlevelID')
             ->where(["classroomID"=>$request->input('id'),"yearlevelSoftDelete"=>0,"departmentSoftDelete"=>0])
             ->update([
                 "classroomName"=>strtolower($request->input('room')),
                 "classroomType"=>$request->input('type'),
-                "classroomYearlevel"=>$request->input('year'),
                 "classroomMulti"=>$request->input('overwrite'),
             ]);
 
@@ -166,7 +147,6 @@ class ClassroomController extends Controller
             }
 
             Classroom::join('departments','classroomDepartment','=','department')
-            ->join('year_levels','classroomYearlevel','=','yearlevelID')
             ->where(['classroomID'=>$id,"yearlevelSoftDelete"=>0,"departmentSoftDelete"=>0])
             ->update(['classroomSoftDelete'=>1]);
 

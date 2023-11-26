@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string("classroomName",50);
             $table->string("classroomType",10)->default("lecture");
             $table->boolean("classroomMulti")->default(0);
-            $table->unsignedBigInteger('classroomYearlevel');
+            // $table->unsignedBigInteger('classroomYearlevel');
             $table->string("classroomDepartment",20);
             $table->boolean("classroomSoftDelete")->default(false);
-            $table->foreign('classroomYearlevel')->references('yearlevelID')->on('year_levels')->onDelete("cascade");
+            // $table->foreign('classroomYearlevel')->references('yearlevelID')->on('year_levels')->onDelete("cascade");
             $table->foreign('classroomDepartment')->references('department')->on('departments')->onDelete("cascade");
         });
     }
