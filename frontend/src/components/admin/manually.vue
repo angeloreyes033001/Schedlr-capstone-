@@ -594,5 +594,128 @@ onMounted(async()=>{
 
 </script> -->
 <template>
-    manually
+    <div  class="container t-select-none" >
+        <h3 class="text-muted t-font-black" >Manually</h3>
+        <div class="t-mt-3 t-bg-slate-100 t-p-5 t-rounded-[10px]" >
+            <div class="t-grid t-grid-cols-[1fr,350px]" >
+                <div class="t-p-2" >
+                    <div class="t-bg-white t-rounded-[10px] t-shadow t-p-5 t-grid t-grid-cols-[200px,1fr] t-h-full" >
+                        <div>
+                            a
+                        </div>
+                        <div>
+                            b
+                        </div>
+                    </div>
+                </div>
+                <div class="t-p-2" >
+                    <div class="t-bg-white t-rounded-[10px] t-shadow t-p-5" >
+                        <h6 class="text-muted t-font-bold" >Last added.</h6>
+                        <div class="" >
+                            <span class="t-grid t-grid-cols-2" >
+                                <span class="t-text-[14px]" >Fullname</span>
+                                <span class="t-capitalize" >angelo reyes</span>
+                            </span>
+                            <span class="t-grid t-grid-cols-2" >
+                                <span class="t-text-[14px]" >Subject</span>
+                                <span class="t-uppercase t-text-[14px]" >CC-101</span>
+                            </span>
+                            <span class="t-grid t-grid-cols-2" >
+                                <span class="t-text-[14px]" >Classroom</span>
+                                <span class="t-capitalize t-text-[14px]" >Room 101</span>
+                            </span>
+                            <span class="t-grid t-grid-cols-2" >
+                                <span class="t-text-[14px]" >Semester</span>
+                                <span class="t-capitalize t-text-[14px]" >1st semester</span>
+                            </span>
+                            <span class="t-grid t-grid-cols-2" >
+                                <span class="t-text-[14px]" >Day</span>
+                                <span class="t-capitalize t-text-[14px]" >monday</span>
+                            </span>
+                            <span class="t-grid t-grid-cols-2" >
+                                <span class="t-text-[14px]" >Time</span>
+                                <span class="t-capitalize t-text-[14px]" >7:00 AM-10:00PM</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="t-mt-3 t-bg-white t-p-5 t-shadow t-rounded-[10px]">
+                <div class="t-grid t-grid-cols-6 t-h-[50px] t-bg-slate-300" >
+                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                        <label>Subject</label>
+                    </span>
+                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                        <label>Subject Hour</label>
+                    </span>
+                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                        <label>Total Section</label>
+                    </span>
+                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                        <label>Total Hours</label>
+                    </span>
+                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                        <label>Faculty Time given</label>
+                    </span>
+                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                        <label>Status</label>
+                    </span>
+                </div>
+                <div v-for="data in 1"  class="t-grid t-grid-cols-6 t-h-[40px] even:t-bg-white odd:t-bg-slate-100" >
+                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                        <label class="t-text-[14px]" >CC-101</label>
+                    </span>
+                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                        <label class="t-text-[14px]" >5</label>
+                    </span>
+                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                        <label class="t-text-[14px]" >2</label>
+                    </span>
+                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                        <label class="t-text-[14px]" >10</label>
+                    </span>
+                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                        <label class="t-text-[14px]" >10</label>
+                    </span>
+                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                        <label class="t-text-[14px]" >
+                            <fa icon="circle-check" class="t-text-green-400"  ></fa>
+                        </label>
+                    </span>
+                </div>
+            </div>
+            <div class="t-mt-3 t-bg-white t-rounded-[10px] t-shadow t-p-5" >
+                <div class="t-flex t-gap-2" >
+                    <button @click="change_tab('professor')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'professor'}" >
+                        <fa icon="users" ></fa>
+                        professors
+                    </button>
+                    <button @click="change_tab('section')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'section'}" >
+                        <fa icon="layer-group" ></fa>
+                        Section
+                    </button>
+                    <button @click="change_tab('classroom')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'classroom'}" >
+                        <fa icon="people-roof" ></fa>
+                        Classroom
+                    </button>
+                </div>
+                <div class="" >
+
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
+<script setup>
+import { ref } from 'vue';
+import Swal from 'sweetalert2';
+
+const isProcess = ref(false);
+
+const current_tab = ref('professor');
+const change_tab = (change)=>{
+    current_tab.value = change;
+}
+
+</script>

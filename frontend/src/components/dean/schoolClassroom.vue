@@ -45,17 +45,9 @@
                     <div  class="t-grid t-grid-cols-5 t-h-[60px] t-bg-slate-50 t-rounded-[5px] t-mt-2 t-mb-1 t-p-2 t-border"
                     v-for="classroom in computed_classroom" :key="classroom.id" >
                         <div class="t-flex t-items-center t-h-full" >
-                            <label v-if="isEditMode != classroom.id" class="t-  capitalize t-font-normal text-muted t-truncate" :title="classroom.room" >{{ classroom.room }}</label>
+                            <label v-if="isEditMode != classroom.id" class="t-capitalize t-font-normal text-muted t-truncate" :title="classroom.room" >{{ classroom.room }}</label>
                             <div v-else  class="form-group t-pl-[3px] t-pr-[3px]" >
                                 <input v-model="classrooms.room" :disabled="isProcess" class="form-control t-capitalize" type="text" >
-                            </div>
-                        </div>
-                        <div class="t-flex t-items-center t-h-full" >
-                            <label v-if="isEditMode != classroom.id" class="t-capitalize t-font-normal text-muted t-truncate" :title="classroom.yearName" >{{ classroom.yearName }}</label>
-                            <div v-else  class="form-group t-pl-[3px] t-pr-[3px] t-w-full" >
-                                <select  v-model="classrooms.year"  class="form-select">
-                                    <option  v-for="year in yearlevelData" :value="year.id" >{{ year.year }}</option>
-                                </select>
                             </div>
                         </div>
                         <div class="t-flex t-items-center t-h-full" >
@@ -88,7 +80,6 @@
                                 id: classroom.id,
                                 room: classroom.room,
                                 type: classroom.type,
-                                year: classroom.year,
                                 overwrite: classroom.multi
                             })" >
                                 <fa icon="edit" class="t-text-[18px] t-font-semibold t-text-slate-400 hover:t-text-slate-200" ></fa>
@@ -128,16 +119,6 @@
                         </div>
                         <div class="mt-2">
                             <div class="form-group">
-                                <label for="">Year</label>
-                                <select v-model="classrooms.year" :disabled="isProcess" class="form-select" >
-                                    <option selected value="" >Select Year</option>
-                                    <option v-for="year in yearlevelData" :key="year.id" :value="year.id" >{{ year.year }}</option>
-                                </select>
-                            </div>
-                            <small class="text-danger" v-if="classroomError.year != ''" >{{ classroomError.year }}</small>
-                        </div>
-                        <div class="mt-2">
-                            <div class="form-group">
                                 <label for="">Type</label>
                                 <select v-model="classrooms.type" :disabled="isProcess" class="form-select" >
                                     <option value="lecture" >Lecture</option>
@@ -174,10 +155,8 @@ import {ref,computed, inject} from 'vue';
 import {classroomStore} from '../../services/classrooms';
 const use_classroomStore = classroomStore();
 const globalClassroomData = inject('globalClassroomData');
-const globalYearlevelData = inject('globalYearLevelData');
 
 const classroomData = ref(globalClassroomData);
-const yearlevelData = ref(globalYearlevelData);
 
 const isSearch = ref('');
 const isProcess = ref(false);
@@ -187,7 +166,6 @@ const classrooms = ref({
     id: '',
     room: '',
     type: 'lecture',
-    year: '',
     overwrite: 0,
 });
 
@@ -196,7 +174,7 @@ const classroomError = ref(
         id: '',
         room: '',
         type: '',
-        year: '',
+
         overwrite: '',
     }
 )
@@ -211,7 +189,6 @@ const reset = ()=>{
         id: '',
         room: '',
         type: 'lecture',
-        year: '',
         overwrite: 0,
     }
 }
@@ -221,7 +198,6 @@ const resetError = ()=>{
         id: '',
         room: '',
         type: '',
-        year: '',
         overwrite: 0,
     }
 }
@@ -280,10 +256,6 @@ const create_classroom = ()=>{
 
                     if(response.error == 'type'){
                         classroomError.value.type = response.msg;
-                    }
-
-                    if(response.error == 'year'){
-                        classroomError.value.year = response.msg;
                     }
 
                     if(response.error == 'overwrite'){

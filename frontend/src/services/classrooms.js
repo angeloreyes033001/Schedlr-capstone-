@@ -11,7 +11,6 @@ export const classroomStore = defineStore('classrooms',{
             const formData = new FormData();
             formData.append('room',data.room);
             formData.append('type',data.type);
-            formData.append('year', data.year);
             formData.append('overwrite',data.overwrite);
             formData.append('tokens', localStorage.getItem('tokens'));
 
@@ -28,7 +27,6 @@ export const classroomStore = defineStore('classrooms',{
             formData.append('id', data.id);
             formData.append('room', data.room);
             formData.append('type',data.type);
-            formData.append('year',data.year);
             formData.append('overwrite',data.overwrite)
             const response = await apiRequest.post('/api/classrooms/update',formData);
             this.response = response;

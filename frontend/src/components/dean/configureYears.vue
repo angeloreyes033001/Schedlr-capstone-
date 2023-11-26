@@ -54,10 +54,9 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
             <div v-else class=" t-justify-center t-items-center t-w-full p-5 t-grid" >
-                <img class="t-w-[700px] t-border-2 t-border-white t-border-b-slate-300" src="../../assets/images/no-data.svg" alt="no-data">
+                <img class="t-w-[400px] t-border-2 t-border-white t-border-b-slate-300" src="../../assets/images/no-data.svg" alt="no-data">
                 <h6 class="text-center t-capitalize t-mt-2" > no record found</h6>
             </div>
         </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\RankController;
@@ -68,12 +69,12 @@ Route::group(["prefix"=>"sections"], function(){
     Route::get('delete_section/{section}',[SectionController::class, 'delete_section']);
 });
 
-// Route::group(["prefix"=>'classrooms'], function(){
-//     Route::post('create',[ClassroomController::class, 'create']);
-//     Route::get('read/{tokens}',[ClassroomController::class, 'read']);
-//     Route::post('update',[ClassroomController::class, 'update']);
-//     Route::get('delete/{id}',[ClassroomController::class, 'delete']);
-// });
+Route::group(["prefix"=>'classrooms'], function(){
+    Route::post('create',[ClassroomController::class, 'create']);
+    Route::get('read/{tokens}',[ClassroomController::class, 'read']);
+    Route::post('update',[ClassroomController::class, 'update']);
+    Route::get('delete/{id}',[ClassroomController::class, 'delete']);
+});
 
 // Route::group(['prefix'=>'subjects'],function(){
 //     Route::post('read_slot', [SubjectController::class,'read_slot']);

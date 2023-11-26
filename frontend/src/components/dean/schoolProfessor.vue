@@ -5,7 +5,7 @@
             <div class="t-flex t-justify-end" >
                 <button :disabled="isProcess || isEditMode !='' ||isSelectLoad != ''" class="btn btn-outline-primary w-25" data-bs-toggle="modal" data-bs-target="#addModal" >
                     <fa icon="plus" ></fa>
-                    ADD SECTION
+                    ADD PROFESSOR
                 </button>
             </div>
             <div class="table-holder mt-3" >

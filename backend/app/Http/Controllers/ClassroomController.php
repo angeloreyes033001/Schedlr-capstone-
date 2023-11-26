@@ -123,7 +123,7 @@ class ClassroomController extends Controller
             }
 
             Classroom::join('departments','classroomDepartment','=','department')
-            ->where(["classroomID"=>$request->input('id'),"yearlevelSoftDelete"=>0,"departmentSoftDelete"=>0])
+            ->where(["classroomID"=>$request->input('id'),"departmentSoftDelete"=>0])
             ->update([
                 "classroomName"=>strtolower($request->input('room')),
                 "classroomType"=>$request->input('type'),
@@ -147,7 +147,7 @@ class ClassroomController extends Controller
             }
 
             Classroom::join('departments','classroomDepartment','=','department')
-            ->where(['classroomID'=>$id,"yearlevelSoftDelete"=>0,"departmentSoftDelete"=>0])
+            ->where(['classroomID'=>$id,"departmentSoftDelete"=>0])
             ->update(['classroomSoftDelete'=>1]);
 
             return response(["status"=>true,"msg"=>"Successfully Deleted"]);

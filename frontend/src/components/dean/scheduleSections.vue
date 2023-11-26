@@ -1,5 +1,5 @@
 <template  >
-    <div class="p-2" >
+    <!-- <div class="p-2" >
         <div class="t-flex t-justify-end t-gap-2" >
             <select @change="updateSemester" v-model="semester" name="" id="" class="w-25 form-select t-inline-block text-capitalize" >
                 <option class="text-capitalize" value="1st semester">1st Semester</option>
@@ -27,49 +27,49 @@
                 <h6 class="text-center" >No Section record</h6>
             </div>
         </div>
-    </div>
+    </div> -->
 </template>
 <script setup >
-    import {computed, ref,onMounted,inject} from 'vue'
-    import schedule from '../partials/schedule-component/singleSchedule.vue'
-    import {publicStore} from '../../services/public';
-    const use_publicStore = publicStore();
+    // import {computed, ref,onMounted,inject} from 'vue'
+    // import schedule from '../partials/schedule-component/singleSchedule.vue'
+    // import {publicStore} from '../../services/public';
+    // const use_publicStore = publicStore();
 
-    const globalYearlevelData = inject('globalYearLevelData');
-    const yearlevelData = ref(globalYearlevelData);
+    // const globalYearlevelData = inject('globalYearLevelData');
+    // const yearlevelData = ref(globalYearlevelData);
 
-    const semester = ref('1st semester');
-    const yearlevelID = ref('');
+    // const semester = ref('1st semester');
+    // const yearlevelID = ref('');
 
-    const computedSchedules = computed(()=>{
-        if(yearlevelID.value != ""){
-            return schedules.value.filter(section=>{
-                return section.yearlevelID == yearlevelID.value;
-            })
-        }
-        else{
-            return schedules.value;
-        }
-    })
+    // const computedSchedules = computed(()=>{
+    //     if(yearlevelID.value != ""){
+    //         return schedules.value.filter(section=>{
+    //             return section.yearlevelID == yearlevelID.value;
+    //         })
+    //     }
+    //     else{
+    //         return schedules.value;
+    //     }
+    // })
 
-    const schedules = ref([])
+    // const schedules = ref([])
 
-    const updateSemester = ()=>{
-        readSectionSchedule()
-    }
+    // const updateSemester = ()=>{
+    //     readSectionSchedule()
+    // }
 
-    const readSectionSchedule = async () =>{
-        try {
-            await use_publicStore.readDeanSectionScheudle(semester.value);
-            schedules.value = use_publicStore.getSchedule;
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    // const readSectionSchedule = async () =>{
+    //     try {
+    //         await use_publicStore.readDeanSectionScheudle(semester.value);
+    //         schedules.value = use_publicStore.getSchedule;
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
 
-    onMounted(()=>{
-        readSectionSchedule();
-    })
+    // onMounted(()=>{
+    //     readSectionSchedule();
+    // })
 
 
 </script>
