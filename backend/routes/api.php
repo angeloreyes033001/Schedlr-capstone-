@@ -3,9 +3,12 @@
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\LoadController;
+use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RankController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SpecializationController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearLevelController;
 use Illuminate\Support\Facades\Route;
@@ -76,31 +79,32 @@ Route::group(["prefix"=>'classrooms'], function(){
     Route::get('delete/{id}',[ClassroomController::class, 'delete']);
 });
 
-// Route::group(['prefix'=>'subjects'],function(){
-//     Route::post('read_slot', [SubjectController::class,'read_slot']);
-//     Route::post('create',[SubjectController::class, 'create']);
-//     Route::get('read/{tokens}', [SubjectController::class , 'read'] );
-//     Route::post('update',[SubjectController::class, 'update']);
-//     Route::get('delete/{code}', [SubjectController::class, 'delete']);
-// });
+Route::group(['prefix'=>'subjects'],function(){
+    Route::post('read_slot', [SubjectController::class,'read_slot']);
+    Route::post('create',[SubjectController::class, 'create']);
+    Route::get('read/{tokens}', [SubjectController::class , 'read'] );
+    Route::post('update',[SubjectController::class, 'update']);
+    Route::get('delete/{code}', [SubjectController::class, 'delete']);
+});
 
+Route::group(['prefix'=>'professors'], function(){
+    Route::post('create',[ProfessorController::class , 'create']);
+    Route::get('read/{tokens}',[ProfessorController::class , 'read']);
+    Route::post('update',[ProfessorController::class , 'update']);
+    Route::get('delete/{id}',[ProfessorController::class , 'delete']);
+    Route::get('count/{tokens}',[ProfessorController::class , 'countProfessor']);
+});
 
-
-
-// Route::group(['prefix'=>'professors'], function(){
-//     Route::post('create',[ProfessorController::class , 'create']);
-//     Route::get('read/{tokens}',[ProfessorController::class , 'read']);
-//     Route::post('update',[ProfessorController::class , 'update']);
-//     Route::get('delete/{id}',[ProfessorController::class , 'delete']);
-//     Route::get('count/{tokens}',[ProfessorController::class , 'countProfessor']);
-// });
-
-// Route::group(['prefix'=>"loads"], function(){
-//     Route::post('create',[LoadController::class, 'create']);
-//     Route::get('read/{professor}',[LoadController::class, 'read']);
-//     Route::get('delete/{id}',[LoadController::class, 'delete']);
-//     Route::post('all-load',[LoadController::class,'show_subject_assigned']);
-// });
+Route::group(['prefix'=>"loads"], function(){
+    // Route::post('create',[LoadController::class, 'create']);
+    // Route::get('read/{professor}',[LoadController::class, 'read']);
+    // Route::get('delete/{id}',[LoadController::class, 'delete']);
+    // Route::post('all-load',[LoadController::class,'show_subject_assigned']);
+    Route::get('read_load_professor/{tokens}',[LoadController::class, 'read_load_professor']);
+    Route::post('read_all_load',[LoadController::class,'read_all_load']);
+    Route::get('delete_load/{id}',[LoadController::class, 'delete_load']);
+    Route::post('create_load',[LoadController::class,'create_load']);
+});
 
 // Route::group(['prefix'=>'officialtime'],function(){
 //     Route::post('create',[OfficialtimeController::class, 'create']);
