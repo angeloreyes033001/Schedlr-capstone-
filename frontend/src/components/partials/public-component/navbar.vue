@@ -10,7 +10,10 @@
                     </div>
                     <ul class=" p-2  md:t-flex md:t-bg-transparent md:t-h-auto md:t-w-auto md:t-relative md:t-gap-5" >
                         <li v-for="nav in navigators" class="t-h-[50px]" >
-                            <router-link :to="nav.link" class="text-white hover:t-text-logoBlue text-decoration-none t-text-black t-font-extralight"  >{{ nav.label }}</router-link>
+                            <router-link :to="nav.link" class="text-white hover:t-text-logoBlue text-decoration-none t-text-black t-font-extralight"  >
+                                <fa :icon="nav.icon" ></fa>
+                                {{ nav.label }}
+                            </router-link>
                         </li>
                     </ul>
                 </div>
@@ -29,23 +32,14 @@
         {
             label: 'Home',
             link: '/',
+            icon: 'home'
         },
         {
-            label: 'Professor',
-            link: '/professor-schedule',
+            label: 'Schedule',
+            link: '/schedule',
+            icon: 'calendar-days'
         },
-        {
-            label: 'Classroom',
-            link: '/classroom-schedule',
-        },
-        {
-            label: 'Section',
-            link: '/section-schedule',
-        },
-        {
-            label: 'Login',
-            link: '/login',
-        },
+        
     ])
 
     const props = defineProps({

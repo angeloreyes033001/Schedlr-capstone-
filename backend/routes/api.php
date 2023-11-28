@@ -12,6 +12,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearLevelController;
 use App\Http\Controllers\OfficialTimeController;
+use App\Http\Controllers\publicController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 
@@ -125,22 +126,11 @@ Route::group(['prefix'=>'schedules'],function(){
     Route::get('delete_schedule/{id}',[ScheduleController::class,'delete_schedule']);
 });
 
-// Route::group(['prefix'=>"public"],function(){
-//     Route::get('showProfessor/{department}', [publicController::class, 'showProfessor']);
-//     Route::post('scheduleProfessor', [publicController::class, 'scheduleProfessor']);
-//     Route::post('printProfessor', [publicController::class, 'printProfessor']);
+Route::group(['prefix'=>"public"],function(){
+    Route::get('read_professor/{department}', [publicController::class, 'read_professor']);
+    Route::post('read_professor_schedule', [publicController::class, 'read_professor_schedule']);
 
-//     Route::get('showClassroom/{department}', [publicController::class, 'showClassroom']);
-//     Route::post('scheduleClassroom', [publicController::class, 'scheduleClassroom']);
-//     Route::post('printClassroom', [publicController::class, 'printClassroom']);
+    Route::get('read_classroom/{department}',[publicController::class,'read_classroom']);
+    Route::post('read_classroom_schedule',[publicController::class,'read_classroom_schedule']);
 
-//     Route::get('showSection/{department}', [publicController::class, 'showSection']);
-//     Route::post('scheduleSection', [publicController::class, 'scheduleSection']);
-//     Route::post('printSection', [publicController::class, 'printSection']);
-//     # inside dean schedule
-//     Route::post('deanProfessor',[publicController::class, 'deanProfessorSchedule']);
-//     Route::post('deanSection',[publicController::class, 'deanSectionSchedule']);
-//     Route::post('deanClassroom',[publicController::class, 'deanClassroomSchedule']);
-//     Route::get('deanlast/{tokens}',[publicController::class, 'deanLastSchedule']);
-//     Route::get('deanlastDepartment/{tokens}',[publicController::class, 'deanLastScheduleDepartment']);
-// });
+});

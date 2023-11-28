@@ -156,15 +156,6 @@ const globalFetchSubject = async ()=>{
     endRequest();
 }
 
-// const globalSectionData = ref([]);
-// const globalFetchSection = async ()=>{
-//     startRequest();
-//     await use_sectionStore.read();
-//     const response = use_sectionStore.getSections;
-//     globalSectionData.value = response;
-//     endRequest();
-// }
-
 const globalProfessorData = ref([]);
 const globalFetchProfessor = async ()=>{
     startRequest();

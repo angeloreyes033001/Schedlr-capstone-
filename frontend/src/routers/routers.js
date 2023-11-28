@@ -86,7 +86,7 @@ const routes = [
         }
     },
     {   path: '/',
-        component: ()=>import('../components/public.vue'),
+        component: ()=>import('../components/index.vue'),
         beforeEnter: async (to, from, next) => {
             const { isAuth, isRole } = await session();
             if (isAuth) {
@@ -100,9 +100,13 @@ const routes = [
             }
         } 
     },
-    { path: '/professor-schedule', component: ()=>import('../components/publicProfessor.vue') },
-    { path: '/classroom-schedule', component: ()=>import('../components/publicClassroom.vue') },
-    { path: '/section-schedule', component: ()=>import('../components/publicSection.vue') },
+    { path: '/schedule', component: ()=>import('../components/partials/public-component/public-schedule-holder.vue') },
+    {
+      path: '/print/:id/:semester',
+      name: 'PrintPage',
+      component: ()=>import('../components/partials/print-component/print.vue') ,
+      props: true, // To pass route params as props to the component
+    },
     { path: '/:pathMatch(.*)*', component: ()=>import('../components/notFound.vue')}, 
 ]
 

@@ -156,15 +156,15 @@
             </div>
             <div class="t-mt-3 t-bg-white t-rounded-[10px] t-shadow t-p-5" >
                 <div class="t-flex t-gap-2" >
-                    <button @click="change_tab('professor')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'professor'}" >
+                    <button @click="change_tab('professor')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'professor' , 'btn-outline-secondary': current_tab != 'professor'}" >
                         <fa icon="users" ></fa>
                         professors
                     </button>
-                    <button @click="change_tab('classroom')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'classroom'}" >
+                    <button @click="change_tab('classroom')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'classroom', 'btn-outline-secondary': current_tab != 'classroom'}" >
                         <fa icon="people-roof" ></fa>
                         Classroom
                     </button>
-                    <button @click="change_tab('section')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'section'}" >
+                    <button @click="change_tab('section')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'section' , 'btn-outline-secondary': current_tab != 'section'}" >
                         <fa icon="layer-group" ></fa>
                         Section
                     </button>

@@ -35,5 +35,5 @@
     </div>
 </template>
 <script setup >
-import navbar from './navbar.vue'
+import navbar from './partials/public-component/navbar.vue';
 </script>
