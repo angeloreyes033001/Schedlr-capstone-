@@ -102,71 +102,71 @@ class Controller extends BaseController
         return ["status"=>true, "msg"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
     }
 
-    protected function hours($professor,$semester, $department = null){
-        try{
+    // protected function hours($professor,$semester, $department = null){
+    //     try{
 
-            $template = [
-                "monday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "tuesday"   =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "wednesday" =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "thursday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "friday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "saturday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            ];
+    //         $template = [
+    //             "monday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "tuesday"   =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "wednesday" =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "thursday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "friday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "saturday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //         ];
 
-            $hours = 0;
-            $schedule = Schedule::where([
-                'scheduleProfessor'=>$professor,
-                'scheduleSemester'=>$semester,
-            ])
-            ->select('scheduleDay as day','scheduleStart as start', 'scheduleEnd as end')
-            ->get();
+    //         $hours = 0;
+    //         $schedule = Schedule::where([
+    //             'scheduleProfessor'=>$professor,
+    //             'scheduleSemester'=>$semester,
+    //         ])
+    //         ->select('scheduleDay as day','scheduleStart as start', 'scheduleEnd as end')
+    //         ->get();
     
-            $day = null;
-            for($i = 0; $i < count($schedule);$i++){
-                $day = $schedule[$i]->day;
-                for($x =  $schedule[$i]->start;$x < $schedule[$i]->end; $x++ ){
-                    $template[$day][$x] = 1;
-                    $hours += 30;
-                }
-            }
+    //         $day = null;
+    //         for($i = 0; $i < count($schedule);$i++){
+    //             $day = $schedule[$i]->day;
+    //             for($x =  $schedule[$i]->start;$x < $schedule[$i]->end; $x++ ){
+    //                 $template[$day][$x] = 1;
+    //                 $hours += 30;
+    //             }
+    //         }
 
-            $template = [
-                "monday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "tuesday"   =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "wednesday" =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "thursday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "friday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "saturday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            ];
+    //         $template = [
+    //             "monday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "tuesday"   =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "wednesday" =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "thursday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "friday"    =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //             "saturday"  =>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    //         ];
 
-            $minor = MinorSchedule::where([
-                "minorProfessor"=>$professor,
-                "minorSemester"=> $semester,
-                "minorDepartment"=>$department,
-            ])
-            ->select('minorDay as day','minorStart as start', 'minorEnd as end')
-            ->get();
+    //         $minor = MinorSchedule::where([
+    //             "minorProfessor"=>$professor,
+    //             "minorSemester"=> $semester,
+    //             "minorDepartment"=>$department,
+    //         ])
+    //         ->select('minorDay as day','minorStart as start', 'minorEnd as end')
+    //         ->get();
 
-            $day = null;
-            for($i = 0; $i < count($minor);$i++){
-                $day = $minor[$i]->day;
-                for($x =  $minor[$i]->start;$x < $minor[$i]->end; $x++ ){
-                    $template[$day][$x] = 1;
-                    $hours += 30;
-                }
-            }
+    //         $day = null;
+    //         for($i = 0; $i < count($minor);$i++){
+    //             $day = $minor[$i]->day;
+    //             for($x =  $minor[$i]->start;$x < $minor[$i]->end; $x++ ){
+    //                 $template[$day][$x] = 1;
+    //                 $hours += 30;
+    //             }
+    //         }
 
-            $time = $hours/60;
-            if(is_int($time)){
-                return ["hour"=>$time , "text"=>$time.":00"];
-            }
-            else{
-                return ["hour"=>$time , "text"=>(int)$time.":30"];
-            }
-        }
-        catch(Exception $e){
-            Log::error($e->getMessage());
-        }
-    }
+    //         $time = $hours/60;
+    //         if(is_int($time)){
+    //             return ["hour"=>$time , "text"=>$time.":00"];
+    //         }
+    //         else{
+    //             return ["hour"=>$time , "text"=>(int)$time.":30"];
+    //         }
+    //     }
+    //     catch(Exception $e){
+    //         Log::error($e->getMessage());
+    //     }
+    // }
 }

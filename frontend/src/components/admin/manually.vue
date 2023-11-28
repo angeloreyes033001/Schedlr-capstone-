@@ -1,361 +1,784 @@
-<!-- <template>
-    <div class="t-h-screen t-w-full t-overflow-hidden t-select-none" >
-        <div class="t-h-full t-grid t-grid-cols-[1fr,350px]" >
-            <div class="t-overflow-hidden" >
-                <div class="p-4  t-h-full t-pt-[160px] t-relative t-overflow-auto" >
-                    <div class="t-bg-logoYellow t-rounded-[10px] t-p-[10px]  t-h-[150px]  " >
-                        <h3 class="t-pl-[10px] t-pt-[20px]" >Welcome to Schedlr,<br>Now venturing Manual Scheduling</h3>
-                    </div>
-                    <div class="t-h-[40px] t-mt-[20px]" >
-                        <div class="t-flex t-justify-between t-h-full" >
-                            <div class="t-flex t-h-full" >
-                                <div @click="changeContentSchedule('professor')" :class="{'t-bg-slate-200 t-font-semibold': computedContentShower == 'professor'}" class="t-cursor-pointer  t-rounded-t-[10px] t-h-full t-flex t-items-center t-pl-[10px] t-w-[120px]" >Professor</div>
-                                <div @click="changeContentSchedule('classroom')" :class="{'t-bg-slate-200 t-font-semibold': computedContentShower == 'classroom'}" class="t-cursor-pointer  t-rounded-t-[10px] t-h-full t-flex t-items-center t-pl-[10px] t-w-[120px] " >Classroom</div>
-                                <div @click="changeContentSchedule('section')" :class="{'t-bg-slate-200 t-font-semibold': computedContentShower == 'section'}" class="  t-cursor-pointert-rounded-t-[10px] t-h-full t-flex t-items-center t-pl-[10px] t-w-[120px]" >Section</div>
-                            </div>
-                            <div class="t-flex t-gap-2 t-relative" >
-                                <div class="form-group" >
-                                    <select :disabled="selected.professorID == '' || isProcess" @change="changeSemester" v-model="semester" class="form-select"  >
-                                        <option value="1st semester">1st Semester</option>
-                                        <option value="2nd semester">2nd Semester</option>
-                                    </select>
+<template>
+    <div  class="container t-select-none" >
+        <h3 class="text-muted t-font-black" >Manually</h3>
+        <!-- <pre>{{ schedules }}</pre> -->
+        <div class="t-mt-3 t-bg-slate-100 t-p-5 t-rounded-[10px]" >
+            <div class="" >
+                <div class="t-p-2" >
+                    <div class="t-bg-white t-rounded-[10px] t-shadow t-p-5 t-h-full" >
+                        <div class="t-w-[200px] t-m-3 t-relative" >
+                           <input @focus="focus_function" v-model="isSearch" placeholder="Search Professor" class="form-control" >
+                           <div v-show="focusInput" class="t-absolute t-top-[60px] t-w-[400px] t-shadow t-rounded-[10px] t-p-3 t-bg-slate-200" >
+                                <div class="t-grid t-grid-cols-[1fr,60px]" >
+                                    <span>All Professor</span>
+                                    <button @click="blur_function" class="btn btn-danger" >
+                                        <fa icon="close" ></fa>
+                                    </button>
                                 </div>
-                                <div class="d-flex t-gap-2" >
-                                    <button :disabled="selected.professorID == '' || isProcess" @click="showModalButton('delete')" class="btn btn-outline-danger" ><fa icon="trash" ></fa></button>
-                                    <button :disabled="selected.professorID == '' || isProcess" @click="showModalButton('form')" class="btn btn-outline-primary" ><fa icon="plus" ></fa></button>
-                                    <div v-show="showModal != ''" class=" t-overflow-auto t-p-3 t-absolute t-h-[560px] t-w-[300px] bg-white t-shadow t-right-0 t-top-[50px] t-z-50" >
-                                        <div v-show="showModal == 'form' " >
-                                            <form @submit.prevent="createSchedule" >
-                                                <div class="form-group mt-2">
-                                                    <label for="" class="fw-bold">Semester</label>
-                                                    <select :disabled="isProcess" @change="changeSemester" v-model="semester" class="form-select">
-                                                        <option value="1st semester">1st Semester</option>
-                                                        <option value="2nd semester">2nd Semester</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group mt-2">
-                                                    <label for="" class="fw-bold">Subject</label>
-                                                    <select :disabled="isProcess" v-model="schedule.subject" class="form-select text-uppercase">
-                                                        <option  value="" selected >Select Subject</option>
-                                                        <option class="text-uppercase" v-for="subject in globalLoadData" :key="subject.code" :value="subject.code">{{subject.code}}</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group mt-2">
-                                                    <label for="" class="fw-bold">Classroom</label>
-                                                    <select :disabled="schedule.subject == '' || isProcess" v-model="schedule.room" @change="changeClassroom" class="form-select text-uppercase">
-                                                        <option selected disabled value="" class="text-uppercase" >Select Room</option>
-                                                        <option class="text-capitalize text-uppercase" v-for="classroom in globalClassroomData" :key="classroom.id" :value="classroom.id" >{{classroom.room}}</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group mt-2">
-                                                    <label for="" class="fw-bold">Section</label>
-                                                    <select :disabled="schedule.room == '' || isProcess" v-model="schedule.section" @change="changeSection" class="form-select text-uppercase">
-                                                        <option selected disabled value="">Select Section</option>
-                                                        <option v-for="section in globalSectionData" :key="section.id" :value="section.id" >{{section.section}}</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group mt-2">
-                                                    <label for="" class="fw-bold">Day</label>
-                                                    <select :disabled="schedule.section == '' || isProcess" v-model="schedule.day" class="form-select">
-                                                        <option value="monday">Monday</option>
-                                                        <option value="tuesday">Tuesday</option>
-                                                        <option value="wednesday">Wednesday</option>
-                                                        <option value="thursday">Thursday</option>
-                                                        <option value="friday">Friday</option>
-                                                        <option value="saturday">Saturday</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group mt-2">
-                                                    <label for="" class="fw-bold">Start</label>
-                                                    <select :disabled="schedule.section == '' || isProcess" v-model="schedule.start" class="form-select">
-                                                        <option  v-for="time in times" :key="time.id" :value="time.id" >{{time.time}}</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group mt-2">
-                                                    <label for="" class="fw-bold">End</label>
-                                                    <select :disabled="schedule.section == '' || isProcess" v-model="schedule.end" class="form-select">
-                                                        <option  v-for="time in endTime" :key="time.id" :value="time.id" >{{time.time}}</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group mt-2" >
-                                                    <button  :disabled="schedule.subject == '' || schedule.room =='' || schedule.section == ''  || isProcess " class="btn btn-primary w-100" >
-                                                        <fa icon="save" ></fa> Save
-                                                    </button>
-                                                </div>
-                                            </form>
+                                <hr>
+                                <div v-for="professor in computedProfessor" @click="selectedProfessor(professor.professorID)" class=" t-cursor-pointer t-relative t-w-full t-mt-2 t-bg-slate-100 t-p-2 t-rounded-[10px]" >
+                                    <div class="t-flex" >
+                                        <div class="" >
+                                            <img src="../../assets/images/profile.png"  class="t-h-[80px]">
                                         </div>
-                                        <div v-show="showModal == 'delete'" >
-                                            <div class="">
-                                                <div v-for="data in showDeleteData" :key="data.id" class="t-grid t-grid-cols-[1fr,40px] hover:t-bg-slate-200 p-2" >
-                                                    <span>
-                                                        <h6 class="text-uppercase t-m-0" >{{data.day}}</h6>
-                                                        <small>{{data.time}}</small> <br>
-                                                        <small class="text-capitalize" >{{ data.section}} - {{ data.classroom }}</small>
-                                                    </span>
-                                                    <span class="d-flex grid-justify-content-center align-items-end" >
-                                                        <button :disabled="isProcess" @click="deleteSchedule(data.id)" class="btn btn-outline-danger" ><fa icon="trash"></fa></button>
-                                                    </span>
+                                        <div class="t-flex t-items-center" >
+                                            <div class="" >
+                                                <div class="t-grid t-grid-cols-2 t-gap-1" >
+                                                    <span>ID:</span>
+                                                    <span>{{ professor.professorID }}</span>
+                                                </div>
+                                                <div class="t-grid t-grid-cols-2 t-gap-1" >
+                                                    <span>Fulname:</span>
+                                                    <span>{{ professor.fullname }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>    
-                        </div>
-                        <div class="t-bg-slate-200 p-3" >
-                            <div v-if="computedContentShower =='professor'" >
-                                <div v-if="selected.professorID != ''" >
-                                    <scheduleTable :schedules="scheduleProfessor" ></scheduleTable>
-                                </div>
-                                <div v-else class="d-grid justify-content-center align-items-center t-pt-3" >
-                                    <div class="d-grid justify-content-center align-items-center" >
-                                        <img src="../../assets/images/table.png" style="height: 130px;" alt="">
-                                    </div>
-                                    <small class="t-text-fint-extralight">Please select professor first!.</small>
-                                </div>
-                            </div>
-                            <div v-else-if="computedContentShower =='classroom'" >
-                                <div v-if="schedule.room != ''" >
-                                    <scheduleTable :schedules="scheduleClassroom" ></scheduleTable>
-                                </div>
-                                <div v-else class="d-grid justify-content-center align-items-center t-pt-3" >
-                                    <div class="d-grid justify-content-center align-items-center" >
-                                        <img src="../../assets/images/table.png" style="height: 130px;" alt="">
-                                    </div>
-                                    <small class="t-text-fint-extralight">Please select classroom first!.</small>
-                                </div>
-                            </div>
-                            <div v-else >
-                                <div v-if="schedule.section != ''" >
-                                    <scheduleTable :schedules="scheduleSection" ></scheduleTable>
-                                </div>
-                                <div v-else class="d-grid justify-content-center align-items-center t-pt-3" >
-                                    <div class="d-grid justify-content-center align-items-center" >
-                                        <img src="../../assets/images/table.png" style="height: 130px;" alt="">
-                                    </div>
-                                    <small class="t-text-fint-extralight">Please select section first!.</small>
-                                </div>
                             </div>
                         </div>
-                        <br>
+                        <div class="t-mt-3 t-bg-white t-p-5 t-shadow t-rounded-[10px]">
+                            <div class="t-grid t-grid-cols-4 t-h-[50px] t-bg-slate-300" >
+                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                    <label>Subject</label>
+                                </span>
+                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                    <label>Assigned Hour</label>
+                                </span>
+                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                    <label>Lec Hour's</label>
+                                </span>
+                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                    <label>Lab Hour's</label>
+                                </span>
+                            </div>
+                            <div v-for="loads in loadData"  class="t-grid t-grid-cols-4 t-h-[40px] even:t-bg-white odd:t-bg-slate-100" >
+                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                    <label class="t-text-[14px]" >{{ loads.code }}</label>
+                                </span>
+                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                    <label class="t-text-[14px]" >{{ loads.givenHour }}</label>
+                                </span>
+                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                    <label class="t-text-[14px]" >{{ loads.lec }}</label>
+                                </span>
+                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                    <label class="t-text-[14px]" >{{ loads.lab }}</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="t-flex t-justify-between t-mt-3" >
+                            <form @submit.prevent="create_schedule" class="t-flex t-flex-auto t-gap-2" >
+                                <div class="form-grooup" >
+                                    <select class="form-select" :disabled="isProcess || schedules.professor == '' " v-model="schedules.subject"  @change="change_load" >
+                                        <option value="" >Subject</option>
+                                        <option v-for="loads in loadData" :value="loads.code" >{{loads.code}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-grooup" >
+                                    <select @change="change_work" :disabled="isProcess || schedules.professor == '' || schedules.subject == '' "  class="form-select" v-model="schedules.work" >
+                                        <option value="" >Time</option>
+                                        <option value="lecture" >lecture</option>
+                                        <option value="laboratory" >Laboratory</option>
+                                    </select>
+                                </div>
+                                <div class="form-grooup" >
+                                    <select @change="getClassroomSchedule" :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == ''" class="form-select t-capitalize" v-model="schedules.classroom" >
+                                        <option class="t-capitalize" disabled value="" >Classroom</option>
+                                        <option class="t-capitalize" v-for="classroom in classroomData" :value="classroom.id" >{{ classroom.classroom }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-grooup" >
+                                    <select @change="getSectionSchedule" :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == '' || schedules.classroom == ''" class="form-select" v-model="schedules.section" >
+                                        <option value="" selected disabled >Section</option>
+                                        <option v-for="section in sectionData" :value="section.section" >{{ section.section }}</option>
+                                        
+                                    </select>
+                                </div>
+                                <div class="form-grooup" >
+                                    <select :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == '' || schedules.classroom == '' || schedules.section == '' " class="form-select" v-model="schedules.day" >
+                                        <option value="" >Day</option>
+                                        <option value="monday" >Monday</option>
+                                        <option value="tuesday" >Tuesday</option>
+                                        <option value="wednesday" >Wednesday</option>
+                                        <option value="thursday" >Thursday</option>
+                                        <option value="friday" >Friday</option>
+                                        <option value="saturday" >Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="form-grooup" >
+                                    <select @change="filterTime" :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == '' || schedules.classroom == '' || schedules.section == '' || schedules.day == '' " class="form-select t-capitalize" v-model="schedules.start" >
+                                        <option class="t-capitalize" v-for="time in timers" :key="time.id" :value="time.id" >{{ time.label }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-grooup" >
+                                    <select class="form-select" disabled v-model="schedules.end" >
+                                        <option class="" value="" >End Time</option>
+                                        <option class="t-capitalize" v-for="time in endTime" :key="time.id" :value="time.id" >{{ time.label }}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == '' || schedules.classroom == '' || schedules.section == '' || schedules.day == '' " type="submit" class="btn btn-primary " >
+                                        <fa icon="save" ></fa>
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="" >
+                                <button  class="btn btn-danger w-100" >
+                                    <fa icon="trash" ></fa>
+                                    Remove Schedule
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="t-h-auto p-4" >
-                <div class="form-group t-relative t-z-50" >
-                    <input :disabled="isProcess" @focus="focusShow" v-model="isSearch" placeholder="Search Professor" type="text" class="form-control">
-                    <div v-show="isFocusSearch" class="bg-white shadow-lg mt-2 p-2 t-h-[400px] t-w-full t-overflow-x-auto t-z-50 t-absolute" >
-                        <button :disabled="isProcess" @click="hideSearch" class="t-absolute t-top-0 t-right-[5px] t-text-[18px] text-danger" ><fa icon="times" ></fa></button>
-                        <div v-for="professor in computedProfessor" class="t-pt-[20px] t-grid t-grid-cols-[50px,1fr] t-cursor-pointer t-bg-white" @click="selectedProfessor(professor)" >
-                            <div class="d-flex justify-center align-items-center" >
-                                <img src="../../assets/images/profile.png" style="height: 40px;" alt="">
-                            </div>
-                            <div class="t-overflow-hidden t-w-full" >
-                                <h6 class="t-text-[13px] t-truncate text-capitalize" >
-                                    <strong>ID: </strong>
-                                    <span>{{ professor.professorID }}</span>
-                                </h6>
-                                <h6 class="t-text-[13px] t-truncate text-capitalize" >
-                                    <strong>Fullname: </strong>
-                                    <span>{{ professor.fullname }}</span>
-                                </h6>
-                            </div>
-                        </div>
-                    </div>
+            <div class="t-mt-3 t-bg-white t-rounded-[10px] t-shadow t-p-5" >
+                <div class="t-flex t-gap-2" >
+                    <button @click="change_tab('professor')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'professor'}" >
+                        <fa icon="users" ></fa>
+                        professors
+                    </button>
+                    <button @click="change_tab('classroom')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'classroom'}" >
+                        <fa icon="people-roof" ></fa>
+                        Classroom
+                    </button>
+                    <button @click="change_tab('section')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'section'}" >
+                        <fa icon="layer-group" ></fa>
+                        Section
+                    </button>
                 </div>
-                <div class="mt-2 t-w-[300px] p-2 t-grid t-grid-cols-[80px,1fr]" >
-                    <div class="d-flex justify-center align-items-center" >
-                        <img src="../../assets/images/profile.png" style="height: 63px;" alt="">
+                <div class="" >
+                    <!-- professor schedule -->
+                    <div v-if="current_tab == 'professor' " class="t-mt-2" >
+                        <table class="table" style="border-spacing: 0;border-collapse: collapse" >
+                            <thead>
+                                <tr>
+                                    <th class="bg-primary text-white " >Time</th>
+                                    <th class="bg-primary text-white " >Mon</th>
+                                    <th class="bg-primary text-white " >Tue</th>
+                                    <th class="bg-primary text-white " >Wed</th>
+                                    <th class="bg-primary text-white " >Thu</th>
+                                    <th class="bg-primary text-white " >Fri</th>
+                                    <th class="bg-primary text-white " >Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(schedule,index) in professorScheduleData" > 
+                                    <td class="" >{{ schedule.time }}</td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.monday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.monday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.monday.id  !== professorScheduleData[index - 1].monday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.monday.subject" >{{ schedule.monday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.monday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.monday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.monday.id === professorScheduleData[index - 3].monday.id &&  schedule.monday.professor === professorScheduleData[index - 1].monday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.monday.id === professorScheduleData[index - 2].monday.id &&  schedule.monday.professor === professorScheduleData[index - 1].monday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.monday.section+'-'+schedule.monday.classroom" >{{schedule.monday.section}} , {{ schedule.monday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.monday.id === professorScheduleData[index - 1].monday.id &&  schedule.monday.professor === professorScheduleData[index - 1].monday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.monday.subject" >{{ schedule.monday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.tuesday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.tuesday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.tuesday.id  !== professorScheduleData[index - 1].tuesday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.tuesday.subject" >{{ schedule.tuesday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.tuesday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.tuesday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.tuesday.id === professorScheduleData[index - 3].tuesday.id &&  schedule.tuesday.professor === professorScheduleData[index - 1].tuesday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.tuesday.id === professorScheduleData[index - 2].tuesday.id &&  schedule.tuesday.professor === professorScheduleData[index - 1].tuesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.tuesday.section+'-'+schedule.tuesday.classroom" >{{schedule.tuesday.section}} , {{ schedule.tuesday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.tuesday.id === professorScheduleData[index - 1].tuesday.id &&  schedule.tuesday.professor === professorScheduleData[index - 1].tuesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.tuesday.subject" >{{ schedule.tuesday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.wednesday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.wednesday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.wednesday.id  !== professorScheduleData[index - 1].wednesday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.wednesday.subject" >{{ schedule.wednesday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.wednesday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.wednesday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.wednesday.id === professorScheduleData[index - 3].wednesday.id &&  schedule.wednesday.professor === professorScheduleData[index - 1].wednesday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.wednesday.id === professorScheduleData[index - 2].wednesday.id &&  schedule.wednesday.professor === professorScheduleData[index - 1].wednesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.wednesday.section+'-'+schedule.wednesday.classroom" >{{schedule.wednesday.section}} , {{ schedule.wednesday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.wednesday.id === professorScheduleData[index - 1].wednesday.id &&  schedule.wednesday.professor === professorScheduleData[index - 1].wednesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.wednesday.subject" >{{ schedule.wednesday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.thursday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.thursday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.thursday.id  !== professorScheduleData[index - 1].thursday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.thursday.subject" >{{ schedule.thursday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.thursday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.thursday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.thursday.id === professorScheduleData[index - 3].thursday.id &&  schedule.thursday.professor === professorScheduleData[index - 1].thursday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.thursday.id === professorScheduleData[index - 2].thursday.id &&  schedule.thursday.professor === professorScheduleData[index - 1].thursday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.thursday.section+'-'+schedule.thursday.classroom" >{{schedule.thursday.section}} , {{ schedule.thursday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.thursday.id === professorScheduleData[index - 1].thursday.id &&  schedule.thursday.professor === professorScheduleData[index - 1].thursday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.thursday.subject" >{{ schedule.thursday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.friday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.friday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.friday.id  !== professorScheduleData[index - 1].friday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.friday.subject" >{{ schedule.friday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.friday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.friday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.friday.id === professorScheduleData[index - 3].friday.id &&  schedule.friday.professor === professorScheduleData[index - 1].friday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.friday.id === professorScheduleData[index - 2].friday.id &&  schedule.friday.professor === professorScheduleData[index - 1].friday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.friday.section+'-'+schedule.friday.classroom" >{{schedule.friday.section}} , {{ schedule.friday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.friday.id === professorScheduleData[index - 1].friday.id &&  schedule.friday.professor === professorScheduleData[index - 1].friday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.friday.subject" >{{ schedule.friday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.saturday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.saturday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.saturday.id  !== professorScheduleData[index - 1].saturday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.saturday.subject" >{{ schedule.saturday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.saturday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.saturday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.saturday.id === professorScheduleData[index - 3].saturday.id &&  schedule.saturday.professor === professorScheduleData[index - 1].saturday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.saturday.id === professorScheduleData[index - 2].saturday.id &&  schedule.saturday.professor === professorScheduleData[index - 1].saturday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.saturday.section+'-'+schedule.saturday.classroom" >{{schedule.saturday.section}} , {{ schedule.saturday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.saturday.id === professorScheduleData[index - 1].saturday.id &&  schedule.saturday.professor === professorScheduleData[index - 1].saturday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.saturday.subject" >{{ schedule.saturday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="t-w-full t-overflow-hidden" >
-                        <h6 :title="selected.professorID" class="t-text-[13px] text-capitalize t-truncate" >
-                            <strong>ID: </strong>
-                            <span v-if="selected.professorID != ''" >
-                                {{selected.professorID}}
-                            </span>
-                            <span v-else >N/A</span>
-                        </h6>
-                        <h6 :title="selected.fullname" class="t-text-[13px] text-capitalize t-truncate" >
-                            <strong>Fullname: </strong>
-                            <span v-if="selected.fullname != ''" >
-                                {{selected.fullname}}
-                            </span>
-                            <span v-else >N/A</span>
-                        </h6>
-                        <h6 :title="selected.rank" class="t-text-[13px] text-capitalize t-truncate" >
-                            <strong>Rank: </strong>
-                            <span v-if="selected.rank != ''" >
-                                {{selected.rank}}
-                            </span>
-                            <span v-else >N/A</span>
-                        </h6>
+                    <!-- classroom schedule -->
+                    <div v-if="current_tab == 'classroom' " class="t-mt-2" >
+                        <table class="table" style="border-spacing: 0;border-collapse: collapse" >
+                            <thead>
+                                <tr>
+                                    <th class="bg-primary text-white " >Time</th>
+                                    <th class="bg-primary text-white " >Mon</th>
+                                    <th class="bg-primary text-white " >Tue</th>
+                                    <th class="bg-primary text-white " >Wed</th>
+                                    <th class="bg-primary text-white " >Thu</th>
+                                    <th class="bg-primary text-white " >Fri</th>
+                                    <th class="bg-primary text-white " >Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(schedule,index) in classroomScheduleData" > 
+                                    <td class="" >{{ schedule.time }}</td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.monday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.monday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.monday.id  !== classroomScheduleData[index - 1].monday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.monday.subject" >{{ schedule.monday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.monday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.monday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.monday.id === classroomScheduleData[index - 3].monday.id &&  schedule.monday.professor === classroomScheduleData[index - 1].monday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.monday.id === classroomScheduleData[index - 2].monday.id &&  schedule.monday.professor === classroomScheduleData[index - 1].monday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.monday.section+'-'+schedule.monday.classroom" >{{schedule.monday.section}} , {{ schedule.monday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.monday.id === classroomScheduleData[index - 1].monday.id &&  schedule.monday.professor === classroomScheduleData[index - 1].monday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.monday.subject" >{{ schedule.monday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.tuesday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.tuesday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.tuesday.id  !== classroomScheduleData[index - 1].tuesday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.tuesday.subject" >{{ schedule.tuesday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.tuesday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.tuesday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.tuesday.id === classroomScheduleData[index - 3].tuesday.id &&  schedule.tuesday.professor === classroomScheduleData[index - 1].tuesday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.tuesday.id === classroomScheduleData[index - 2].tuesday.id &&  schedule.tuesday.professor === classroomScheduleData[index - 1].tuesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.tuesday.section+'-'+schedule.tuesday.classroom" >{{schedule.tuesday.section}} , {{ schedule.tuesday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.tuesday.id === classroomScheduleData[index - 1].tuesday.id &&  schedule.tuesday.professor === classroomScheduleData[index - 1].tuesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.tuesday.subject" >{{ schedule.tuesday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.wednesday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.wednesday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.wednesday.id  !== classroomScheduleData[index - 1].wednesday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.wednesday.subject" >{{ schedule.wednesday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.wednesday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.wednesday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.wednesday.id === classroomScheduleData[index - 3].wednesday.id &&  schedule.wednesday.professor === classroomScheduleData[index - 1].wednesday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.wednesday.id === classroomScheduleData[index - 2].wednesday.id &&  schedule.wednesday.professor === classroomScheduleData[index - 1].wednesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.wednesday.section+'-'+schedule.wednesday.classroom" >{{schedule.wednesday.section}} , {{ schedule.wednesday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.wednesday.id === classroomScheduleData[index - 1].wednesday.id &&  schedule.wednesday.professor === classroomScheduleData[index - 1].wednesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.wednesday.subject" >{{ schedule.wednesday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.thursday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.thursday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.thursday.id  !== classroomScheduleData[index - 1].thursday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.thursday.subject" >{{ schedule.thursday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.thursday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.thursday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.thursday.id === classroomScheduleData[index - 3].thursday.id &&  schedule.thursday.professor === classroomScheduleData[index - 1].thursday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.thursday.id === classroomScheduleData[index - 2].thursday.id &&  schedule.thursday.professor === classroomScheduleData[index - 1].thursday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.thursday.section+'-'+schedule.thursday.classroom" >{{schedule.thursday.section}} , {{ schedule.thursday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.thursday.id === classroomScheduleData[index - 1].thursday.id &&  schedule.thursday.professor === classroomScheduleData[index - 1].thursday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.thursday.subject" >{{ schedule.thursday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.friday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.friday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.friday.id  !== classroomScheduleData[index - 1].friday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.friday.subject" >{{ schedule.friday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.friday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.friday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.friday.id === classroomScheduleData[index - 3].friday.id &&  schedule.friday.professor === classroomScheduleData[index - 1].friday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.friday.id === classroomScheduleData[index - 2].friday.id &&  schedule.friday.professor === classroomScheduleData[index - 1].friday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.friday.section+'-'+schedule.friday.classroom" >{{schedule.friday.section}} , {{ schedule.friday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.friday.id === classroomScheduleData[index - 1].friday.id &&  schedule.friday.professor === classroomScheduleData[index - 1].friday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.friday.subject" >{{ schedule.friday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.saturday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.saturday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.saturday.id  !== classroomScheduleData[index - 1].saturday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.saturday.subject" >{{ schedule.saturday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.saturday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.saturday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.saturday.id === classroomScheduleData[index - 3].saturday.id &&  schedule.saturday.professor === classroomScheduleData[index - 1].saturday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.saturday.id === classroomScheduleData[index - 2].saturday.id &&  schedule.saturday.professor === classroomScheduleData[index - 1].saturday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.saturday.section+'-'+schedule.saturday.classroom" >{{schedule.saturday.section}} , {{ schedule.saturday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.saturday.id === classroomScheduleData[index - 1].saturday.id &&  schedule.saturday.professor === classroomScheduleData[index - 1].saturday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.saturday.subject" >{{ schedule.saturday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="mt-3" >
-                    <div class="mt-2 t-overflow-hidden" >
-                        <h6 class=" t-font-bold t-text-[14px] t-truncate" >Last Schedule added.</h6>
-                        <div class="t-grid t-grid-cols-[80px,1fr] t-mt-2" >
-                            <div class="t-flex t-justify-center t-items-center" >
-                                <img class="t-rounded-[50%] t-h-[50px]" src="../../assets/images/profile.png" alt="profile" >
-                            </div>
-                            <div class="t-grid t-items-center t-overflow-hidden" >
-                                <h6 class=" t-truncate t-font-extralight t-capitalize" >
-                                    <span v-if="last_added != ''" ><strong>{{last_added.fullname}}</strong></span>
-                                    <span v-else ><strong>n/a</strong></span>
-                                </h6>
-                                <h6 class="t-font-extralight  t-truncate t-capitalize t-text-[14px]" >
-                                    <span v-if="last_added != ''" >{{last_added.rank}}</span>
-                                    <span v-else >n/a</span>
-                                </h6>
-                            </div>
-                        </div>
-                        <div >
-                            <div class="t-overflow-hidden" >
-                                <h6 :title="last_added.semester" class=" t-truncate t-text-[14px] t-font-extralight t-capitalize" >
-                                    <strong class="text-capitalize" >Semester: </strong>
-                                    <span v-if="last_added != ''" >{{last_added.semester}}</span>
-                                    <span v-else >n/a</span>
-                                </h6>
-                            </div>
-                            <div class="t-overflow-hidden" >
-                                <h6 :title="last_added.section" class=" t-truncate t-text-[14px] t-font-extralight t-capitalize" >
-                                    <strong class="text-capitalize" >section: </strong>
-                                    <span v-if="last_added != ''" >{{last_added.section}}</span>
-                                    <span v-else >n/a</span>
-                                </h6>
-                            </div>
-                            <div class="t-overflow-hidden" >
-                                <h6 :title="last_added.classroom" class=" t-truncate t-text-[14px] t-font-extralight t-capitalize" >
-                                    <strong class="text-capitalize" >classroom: </strong>
-                                    <span v-if="last_added != ''" >{{last_added.classroom}}</span>
-                                    <span v-else >n/a</span>
-                                </h6>
-                            </div>
-                            <div class="t-overflow-hidden" >
-                                <h6 :title="last_added.subject" class=" t-truncate t-text-[14px] t-font-extralight t-capitalize" >
-                                    <strong class="text-capitalize" >subject: </strong>
-                                    <span v-if="last_added != ''" >{{last_added.subject}}</span>
-                                    <span v-else >n/a</span>
-                                </h6>
-                            </div>
-                            <div class="t-overflow-hidden" >
-                                <h6 :title="last_added.day" class=" t-truncate t-text-[14px] t-font-extralight t-capitalize" >
-                                    <strong class="text-capitalize" >day: </strong>
-                                    <span v-if="last_added != ''" >{{last_added.day}}</span>
-                                    <span v-else >n/a</span>
-                                </h6>
-                            </div>
-                            <div class="t-overflow-hidden" >
-                                <h6 :title="last_added.time" class=" t-truncate t-text-[14px] t-font-extralight t-capitalize" >
-                                    <strong class="text-capitalize" >time: </strong>
-                                    <span v-if="last_added != ''" >{{last_added.time}}</span>
-                                    <span v-else >n/a</span>
-                                </h6>
-                            </div>
-                        </div>
+                    <!-- section schedule -->
+                    <div v-if="current_tab == 'section' " class="t-mt-2" >
+                        <table class="table" style="border-spacing: 0;border-collapse: collapse" >
+                            <thead>
+                                <tr>
+                                    <th class="bg-primary text-white " >Time</th>
+                                    <th class="bg-primary text-white " >Mon</th>
+                                    <th class="bg-primary text-white " >Tue</th>
+                                    <th class="bg-primary text-white " >Wed</th>
+                                    <th class="bg-primary text-white " >Thu</th>
+                                    <th class="bg-primary text-white " >Fri</th>
+                                    <th class="bg-primary text-white " >Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(schedule,index) in sectionScheduleData" > 
+                                    <td class="" >{{ schedule.time }}</td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.monday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.monday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.monday.id  !== sectionScheduleData[index - 1].monday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.monday.subject" >{{ schedule.monday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.monday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.monday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.monday.id === sectionScheduleData[index - 3].monday.id &&  schedule.monday.professor === sectionScheduleData[index - 1].monday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.monday.id === sectionScheduleData[index - 2].monday.id &&  schedule.monday.professor === sectionScheduleData[index - 1].monday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.monday.section+'-'+schedule.monday.classroom" >{{schedule.monday.section}} , {{ schedule.monday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.monday.id === sectionScheduleData[index - 1].monday.id &&  schedule.monday.professor === sectionScheduleData[index - 1].monday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.monday.subject" >{{ schedule.monday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.tuesday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.tuesday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.tuesday.id  !== sectionScheduleData[index - 1].tuesday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.tuesday.subject" >{{ schedule.tuesday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.tuesday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.tuesday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.tuesday.id === sectionScheduleData[index - 3].tuesday.id &&  schedule.tuesday.professor === sectionScheduleData[index - 1].tuesday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.tuesday.id === sectionScheduleData[index - 2].tuesday.id &&  schedule.tuesday.professor === sectionScheduleData[index - 1].tuesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.tuesday.section+'-'+schedule.tuesday.classroom" >{{schedule.tuesday.section}} , {{ schedule.tuesday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.tuesday.id === sectionScheduleData[index - 1].tuesday.id &&  schedule.tuesday.professor === sectionScheduleData[index - 1].tuesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.tuesday.subject" >{{ schedule.tuesday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.wednesday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.wednesday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.wednesday.id  !== sectionScheduleData[index - 1].wednesday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.wednesday.subject" >{{ schedule.wednesday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.wednesday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.wednesday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.wednesday.id === sectionScheduleData[index - 3].wednesday.id &&  schedule.wednesday.professor === sectionScheduleData[index - 1].wednesday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.wednesday.id === sectionScheduleData[index - 2].wednesday.id &&  schedule.wednesday.professor === sectionScheduleData[index - 1].wednesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.wednesday.section+'-'+schedule.wednesday.classroom" >{{schedule.wednesday.section}} , {{ schedule.wednesday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.wednesday.id === sectionScheduleData[index - 1].wednesday.id &&  schedule.wednesday.professor === sectionScheduleData[index - 1].wednesday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.wednesday.subject" >{{ schedule.wednesday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.thursday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.thursday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.thursday.id  !== sectionScheduleData[index - 1].thursday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.thursday.subject" >{{ schedule.thursday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.thursday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.thursday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.thursday.id === sectionScheduleData[index - 3].thursday.id &&  schedule.thursday.professor === sectionScheduleData[index - 1].thursday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.thursday.id === sectionScheduleData[index - 2].thursday.id &&  schedule.thursday.professor === sectionScheduleData[index - 1].thursday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.thursday.section+'-'+schedule.thursday.classroom" >{{schedule.thursday.section}} , {{ schedule.thursday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.thursday.id === sectionScheduleData[index - 1].thursday.id &&  schedule.thursday.professor === sectionScheduleData[index - 1].thursday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.thursday.subject" >{{ schedule.thursday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.friday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.friday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.friday.id  !== sectionScheduleData[index - 1].friday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.friday.subject" >{{ schedule.friday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.friday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.friday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.friday.id === sectionScheduleData[index - 3].friday.id &&  schedule.friday.professor === sectionScheduleData[index - 1].friday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.friday.id === sectionScheduleData[index - 2].friday.id &&  schedule.friday.professor === sectionScheduleData[index - 1].friday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.friday.section+'-'+schedule.friday.classroom" >{{schedule.friday.section}} , {{ schedule.friday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.friday.id === sectionScheduleData[index - 1].friday.id &&  schedule.friday.professor === sectionScheduleData[index - 1].friday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.friday.subject" >{{ schedule.friday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="t-relative" >
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-danger" v-if="schedule.saturday === 1" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0" v-else-if="schedule.saturday === 0" ></div>
+                                        <div class="t-absolute t-w-full t-h-full t-top-0 t-left-0 bg-secondary" v-else >
+                                            <div class="t-w-full t-h-full bg-success"   v-if="index === 0 || schedule.saturday.id  !== sectionScheduleData[index - 1].saturday.id" >
+                                                <div class="" >
+                                                    <h6 class="t-p-1 t-text-white t-truncate text-uppercase t-text-center t-text-[12px] " :title="schedule.saturday.subject" >{{ schedule.saturday.professor }}</h6>
+                                                </div>
+                                            </div>
+                                            <div class="t-h-full t-w-full t-overflow-hidden t-flex t-items-center" >
+                                                <div class="bg-danger t-h-full t-w-full"  v-if="schedule.saturday === 1" >
+                                                    <br>
+                                                </div>
+                                                <div class="t-h-full t-w-full" v-else-if="schedule.saturday === 0" >
+                                                    <br>
+                                                </div>
+                                                <div class="bg-success t-h-full t-w-full t-relative t-flex t-items-center t-justify-center " v-else >
+                                                    <div class="bg-success t-h-full t-w-full"  v-if=" index >= 3  &&  schedule.saturday.id === sectionScheduleData[index - 3].saturday.id &&  schedule.saturday.professor === sectionScheduleData[index - 1].saturday.professor " >
+                                                        <br>
+                                                    </div>
+                                                    <div  class="t-w-full t-h-full bg-success t-flex t-items-center t-justify-center" v-else-if=" index >= 2 &&  schedule.saturday.id === sectionScheduleData[index - 2].saturday.id &&  schedule.saturday.professor === sectionScheduleData[index - 1].saturday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.saturday.section+'-'+schedule.saturday.classroom" >{{schedule.saturday.section}} , {{ schedule.saturday.classroom }}</h6>
+                                                    </div>
+                                                    <div class="bg-success t-max-h-full t-overflow-hidden" v-else-if=" index >= 1 &&  schedule.saturday.id === sectionScheduleData[index - 1].saturday.id &&  schedule.saturday.professor === sectionScheduleData[index - 1].saturday.professor " >
+                                                        <h6 class=" t-text-white t-truncate text-uppercase t-text-center t-text-[12px]" :title="schedule.saturday.subject" >{{ schedule.saturday.subject }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="mt-3" >
-                    <h6 class="t-font-bold" >Notify other department.</h6>
-                    <small class="t-font-extralight text-danger" >
-                        *Take note<br>
-                        Please notify others if you already done.
-                    </small>
-                    
-                    <div class="t-h-[350px] t-relative" >
-                        <div class="form-group" >
-                            <input v-model="isSearchDepartment" class="text-uppercase form-control" placeholder="Search department" >
-                        </div>
-                        <div class="t-overflow-auto t-h-[300px] mt-2" >
-                            <div v-for="dep in computedDepartment" class="t-flex t-justify-between mt-1 mb-1 bg-white t-h-[40px] t-pl-[10px] t-pr-[10px]" >
-                                <div class="t-flex t-items-center" >
-                                    <strong class="text-uppercase" >{{dep.department}}</strong>
-                                </div>
-                                <div class="t-flex t-items-center" >
-                                    <button v-if="!isSending" @click="sendNotification(dep.department)" class="btn" :disabled="isProcess" >
-                                        <fa icon="paper-plane" class="t-text-logoBlue hover:t-text-logoBluePartner t-cursor-pointer" ></fa>
-                                    </button>
-                                    <div v-else class="spinner-border" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div v-if="current_tab == 'classroom'" >classroom</div>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script setup>
-import {ref,onMounted,computed,inject} from 'vue';
+import { ref,inject,computed } from 'vue';
 import Swal from 'sweetalert2';
+
 import {scheduleStore} from '../../services/schedule';
-import {loadStore} from '../../services/Loads';
-import {publicStore} from '../../services/public';
-import scheduleTable from "../partials/schedule-component/singleSchedule.vue";
+const use_scheduleStore = scheduleStore();
+
 
 const isProcess = ref(false);
-
-const globalDepartmentData = inject("globalDepartmentData");
-const departmentData = ref(globalDepartmentData);
-
-const isSearchDepartment = ref('');
-
-const computedDepartment =  computed(()=>{
-    if(isSearchDepartment.value != ''){
-        return departmentData.value.filter((dep)=>{
-            return dep.department.toLowerCase().includes(isSearchDepartment.value.toLowerCase());
-        })
-    }
-    else{
-        return departmentData.value;
-    }
-})
-
-const scheduleContentShower = ref('professor');
-const changeContentSchedule = (scheduleShow)=>{
-    scheduleContentShower.value = scheduleShow;
-}
-const computedContentShower = computed(()=>{
-    return scheduleContentShower.value;
-})
-
-const use_scheduleStore = scheduleStore();
-const use_loadStore = loadStore();
-const use_publicStore = publicStore();
-
-const globalLoadData = ref([]);
-const last_added = ref([]);
-
-const showModal = ref('');
-const showModalButton = (data) =>{
-    if(showModal.value != ""){
-        if(data == showModal.value){
-            showModal.value = "";
-        }
-        else{
-            showModal.value = data;
-        }
-    }
-    else{
-        showModal.value = data;
-    }
-}
-
-const scheduleProfessor = ref([]);
-const scheduleClassroom = ref([]);
-const scheduleSection = ref([]);
-
 const isSearch = ref('');
-const isFocusSearch = ref(false);
-const focusShow = ()=>{
-    isFocusSearch.value = true;
+
+const focusInput = ref('');
+
+const focus_function = ()=>{
+    focusInput.value= true;
 }
 
-const hideSearch = ()=>{
-    isFocusSearch.value = false;
+const blur_function = ()=>{
+    focusInput.value = false;
 }
+
 
 const globalProfessorData = inject('globalProfessorData');   
 const professorData = ref(globalProfessorData);
@@ -370,199 +793,148 @@ const computedProfessor = computed(()=>{
     }
 })
 
-const globalClassroomData = inject('globalClassroomData');
-const globalSectionData = inject('globalSectionData');
-
-const selectedProfessor = async(data)=>{
-    const {professor, fullname,status,rankID,rank,designation} = data;
-    isFocusSearch.value = false;
-    isSearch.value = "";
-    selected.value = {...data};
-
-    await use_scheduleStore.professor({professor:selected.value.professorID , semester: semester.value});
-    scheduleProfessor.value = use_scheduleStore.getSchedule;
-    readProfessorLoad()
-    showDelete();
+const current_tab = ref('professor');
+const change_tab = (change)=>{
+    current_tab.value = change;
 }
 
-const readProfessorLoad = async ()=>{
-    try{
-        isProcess.value = true;
-        schedule.value.subject = "";
-        await use_scheduleStore.showLoad({professor:selected.value.professorID , semester: semester.value});
-        globalLoadData.value = use_scheduleStore.getResponse;
-        isProcess.value = false;
+const timers = ref([
+    {id: 0, label: "7:00 AM"},{id: 1, label: "7:30 AM"},
+    {id: 2, label: "8:00 AM"},{id: 3, label: "8:30 AM"},
+    {id: 4, label: "9:00 AM"},{id: 5, label: "9:30 AM"},
+    {id: 6, label: "10:00 AM"},{id: 7, label: "10:30 AM"},
+    {id: 8, label: "11:00 AM"},{id: 9, label: "11:30 AM"},
+    {id: 10, label: "12:00 NN"},{id: 11, label: "12:30 PM"},
+    {id: 12, label: "1:00 PM"},{id: 12, label: "1:30 PM"},
+    {id: 14, label: "2:00 PM"},{id: 15, label: "2:30 PM"},
+    {id: 16, label: "3:00 PM"},{id: 17, label: "3:30 PM"},
+    {id: 18, label: "4:00 PM"},{id: 19, label: "4:30 PM"},
+    {id: 20, label: "5:00 PM"},{id: 21, label: "5:30 PM"},
+    {id: 22, label: "6:00 PM"},{id: 23, label: "6:30 PM"},
+    {id: 24, label: "7:00 PM"},{id: 25, label: "7:30 PM"},
+    {id: 26, label: "8:00 PM"},{id: 27, label: "8:30 PM"},
+    {id: 28, label: "9:00 PM"},{id: 29, label: "9:30 PM"},
+    {id: 30, label: "10:00 PM"},
+]);
+
+const endTime = ref([]);
+const filterTime = ()=>{
+
+    let time = 0;
+    if(schedules.value.work == "lecture"){
+        time = subjectHour.value.lec * 2;
+    }else{
+        time = subjectHour.value.lab * 2;
     }
-    catch(error){
-        console.error(error)
-    }
+    console.log(time)
+    let total = (schedules.value.start + time) ;
+    let data = timers.value.filter((item)=>item.id >= (schedules.value.start + time) && item.id <= 30 );
+    console.log(data)
+if(data.length ==0){
+    data = timers.value.filter((item)=>item.id>=(30-time)&&item.id<=30)
+    schedules.value.end = 30;
+    schedules.value.start = data[0].id;
+}else{
+
+    schedules.value.end = total;
+}
+console.log(data)
+endTime.value = data;
+
+    
+
 }
 
-const semester = ref('1st semester')
-const selected = ref({
-    professorID: '', fullname: '', status: '', rankID: '', rank: '', designation: '',
+const schedules = ref({
+    day: '',
+    start: 0,
+    end: 1,
+    work: "",
+    timeWork: 0,
+    professor: '',
+    subject: '',
+    classclassroom: '',
+    section: '',
+    semester: '1st semester',
 });
 
-const schedule = ref({
-    professor: selected.value.professorID,
-    day: 'monday',
-    start: 0,
-    end: '',
-    semester: semester.value,
-    subject: '',
-    section: '',
-    room: '',
-    status: '',
-    review: '',
+const selectedProfessor = (professor)=>{
+    schedules.value.professor = professor;
+    getLoads(professor)
+    isSearch.value = "";
+    getProfessorSchedule()
+}
 
+const subjectHour = ref({
+    lab: 0,
+    lec: 0,
 })
 
-const times = ref([
-    { id: 0 , time:"7:00 AM"}, {id: 1 , time:"7:30 AM"},
-    { id: 2 , time:"8:00 AM"}, {id: 3 , time:"8:30 AM"},
-    { id: 4 , time:"9:00 AM"}, {id: 5 , time:"9:30 AM"},
-    { id: 6 , time:"10:00 AM"}, {id: 7 , time:"10:30 AM"},
-    { id: 8 , time:"11:00 AM"}, {id: 9 , time:"11:30 AM"},
-    { id: 10 , time:"12:00 PM"}, {id: 11 , time:"12:30 PM"},
-    { id: 12 , time:"1:00 PM"}, {id: 13 , time:"1:30 PM"},
-    { id: 14 , time:"2:00 PM"}, {id: 15 , time:"2:30 PM"},
-    { id: 16 , time:"3:00 PM"}, {id: 17 , time:"3:30 PM"},
-    { id: 18 , time:"4:00 PM"}, {id: 19 , time:"4:30 PM"},
-    { id: 20 , time:"5:00 PM"}, {id: 21 , time:"5:30 PM"},
-    { id: 22 , time:"6:00 PM"}, {id: 23 , time:"6:30 PM"},
-    { id: 24 , time:"7:00 PM"}, {id: 25 , time:"7:30 PM"},
-    { id: 26 , time:"8:00 PM"}, {id: 27 , time:"8:30 PM"},
-    { id: 28 , time:"9:00 PM"}, {id: 29 , time:"9:30 PM"},
-    { id: 30 , time:"10:00 PM"},
-
-])
-
-const endTime = computed(()=>{
-    schedule.value.end = schedule.value.start + 2;
-    return times.value.slice(schedule.value.start + 2);
-})
-
-const changeSemester = async ()=>{
-    await use_scheduleStore.professor({professor:selected.value.professorID , semester: semester.value});
-    scheduleProfessor.value = use_scheduleStore.getSchedule;
-
-    changeClassroom();
-    changeSection();
-    showDelete();
-    readProfessorLoad();
+const change_load = ()=>{
+    selectedSubject()
+    getSections()
+}
+const selectedSubject = ()=>{
+    const response = loadData.value.find(item => item.code === schedules.value.subject);
+    subjectHour.value.lec  =response.lec;
+    subjectHour.value.lab  =response.lab;
 }
 
-const changeClassroom = async ()=>{
-    try{
-        if(schedule.value.room != ""){
-            isProcess.value = true;
-            await use_scheduleStore.classroom({classroom: schedule.value.room , semester: semester.value});
-            scheduleClassroom.value = use_scheduleStore.getSchedule;
-            isProcess.value = false;
-        }
+const change_work = ()=>{
+    schedules.value.classclassroom = "";
+    selectedHour()
+    getClassrooms()
+}
+
+const selectedHour  = ()=>{
+    
+    if(schedules.value.work === "lecture"){
+        schedules.value.timeWork = subjectHour.value.lec;
     }
-    catch(error){
-        console.log(error)
+    else{
+        schedules.value.timeWork = subjectHour.value.lab;
     }
 }
 
-const changeSection = async ()=>{
-    try{
-        if(schedule.value.section != ""){
-            isProcess.value = true;
-            await use_scheduleStore.section({section: schedule.value.section , semester: semester.value});
-            scheduleSection.value = use_scheduleStore.getSchedule;
-            isProcess.value = false;
-        }
-    }
-    catch(error){
-        console.log(error)
-    }
-}
-
-const showDeleteData = ref([]);
-const showDelete = async ()=>{
-    try{
+const classroomData = ref([]);
+const getClassrooms = async()=>{
+    try {
         isProcess.value = true;
-        await use_scheduleStore.showDelete({professor: selected.value.professorID , semester: semester.value});
-        showDeleteData.value = use_scheduleStore.getResponse;
-
-        //update last added schude
-        last_added_department_function();
-        isProcess.value = false;
-    }
-    catch(error){
-        console.log(error)
-    }
-}
-
-const createSchedule = ()=>{
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Save it!'
-    }).then( async(result) => {
-        if (result.isConfirmed) {
-
-            isProcess.value = true;
-
-            await use_scheduleStore.create({professor: selected.value.professorID, semester: semester.value, subject: schedule.value.subject,
-                room: schedule.value.room, section: schedule.value.section,
-                day: schedule.value.day, start:schedule.value.start , end: schedule.value.end});
-
-            const response = use_scheduleStore.getResponse;
-            
-            if(response.status){
-                changeSemester();
-                Swal.fire("Success", response.msg,"success")
-            }
-            else{
-                Swal.fire("Error",response.msg,"error");
-            }
-
-            isProcess.value = false;
-        }
-    })
-}
-
-const deleteSchedule = (id)=>{
-    try{
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then( async (result) => {
-            if (result.isConfirmed) {
-
-                isProcess.value = true;
-
-                await use_scheduleStore.delete(id);
-                const response = use_scheduleStore.getResponse;
-                if(response.status){
-                    Swal.fire('Success', response.msg,"success");
-                    changeSemester();
-                }
-
-                isProcess.value = false;
-            }  
-        })
-        
-    }
-    catch(error){
+        await use_scheduleStore.getClassrooms(schedules.value.work);
+        classroomData.value = use_scheduleStore.getResponse;
+        isProcess.value= false;
+    } catch (error) {
         console.error(error)
     }
 }
 
-const isSending = ref(false);
-const sendNotification = (department) =>{
+const sectionData = ref([]);
+const getSections = async()=>{
+    try {
+        isProcess.value = true;
+        await use_scheduleStore.getSections(schedules.value.subject);
+        sectionData.value = use_scheduleStore.getResponse;
+        isProcess.value= false;
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const loadData = ref([]);
+const getLoads = async (professor)=>{
+    try {
+        isProcess.value = true;
+
+        await use_scheduleStore.getLoads(professor);
+        loadData.value = use_scheduleStore.getResponse;
+
+        isProcess.value = false;
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const create_schedule = async()=>{
     try {
         Swal.fire({
             title: "Are you sure?",
@@ -571,151 +943,69 @@ const sendNotification = (department) =>{
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes,Sent it!"
-        }).then( async (result) => {
-            isSending.value = true;
-            await use_scheduleStore.notifyOtherDepartment(department);
-            isSending.value = false;
-        });
+            confirmButtonText: "Yes,Save it!"
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                await  use_scheduleStore.create_schedule({
+                    day:schedules.value.day,
+                    start: schedules.value.start,
+                    end: schedules.value.end,
+                    professor: schedules.value.professor,
+                    subject: schedules.value.subject,
+                    classroom: schedules.value.classroom,
+                    section: schedules.value.section
+                });
 
+                const response = use_scheduleStore.getResponse;
+                if(response.status){
+                    getProfessorSchedule();
+                    getClassroomSchedule();
+                    getSectionSchedule();
+                    Swal.fire('Success',response.msg,'success');
+                }
+                else{
+                    Swal.fire("Error",response.msg,"error");
+                }
+            }
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const professorScheduleData = ref([]);
+const getProfessorSchedule = async ()=>{
+    try {
+        await use_scheduleStore.getProfessorSchedule(schedules.value.professor)
+        professorScheduleData.value = use_scheduleStore.getSchedule;
+        current_tab.value = "professor"
     } catch (error) {
         console.error(error);
     }
 }
 
-const last_added_department_function = async ()=>{
-    await use_publicStore.last_added();
-    last_added.value = use_publicStore.getResponse;
+const classroomScheduleData = ref([]);
+const getClassroomSchedule = async ()=>{
+    try {
+        await use_scheduleStore.getClassroomSchedule(schedules.value.classroom)
+        classroomScheduleData.value = use_scheduleStore.getSchedule;
+        current_tab.value = "classroom"
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-onMounted(async()=>{
-    last_added_department_function()
-})
-
-</script> -->
-<template>
-    <div  class="container t-select-none" >
-        <h3 class="text-muted t-font-black" >Manually</h3>
-        <div class="t-mt-3 t-bg-slate-100 t-p-5 t-rounded-[10px]" >
-            <div class="t-grid t-grid-cols-[1fr,350px]" >
-                <div class="t-p-2" >
-                    <div class="t-bg-white t-rounded-[10px] t-shadow t-p-5 t-grid t-grid-cols-[200px,1fr] t-h-full" >
-                        <div>
-                            a
-                        </div>
-                        <div>
-                            b
-                        </div>
-                    </div>
-                </div>
-                <div class="t-p-2" >
-                    <div class="t-bg-white t-rounded-[10px] t-shadow t-p-5" >
-                        <h6 class="text-muted t-font-bold" >Last added.</h6>
-                        <div class="" >
-                            <span class="t-grid t-grid-cols-2" >
-                                <span class="t-text-[14px]" >Fullname</span>
-                                <span class="t-capitalize" >angelo reyes</span>
-                            </span>
-                            <span class="t-grid t-grid-cols-2" >
-                                <span class="t-text-[14px]" >Subject</span>
-                                <span class="t-uppercase t-text-[14px]" >CC-101</span>
-                            </span>
-                            <span class="t-grid t-grid-cols-2" >
-                                <span class="t-text-[14px]" >Classroom</span>
-                                <span class="t-capitalize t-text-[14px]" >Room 101</span>
-                            </span>
-                            <span class="t-grid t-grid-cols-2" >
-                                <span class="t-text-[14px]" >Semester</span>
-                                <span class="t-capitalize t-text-[14px]" >1st semester</span>
-                            </span>
-                            <span class="t-grid t-grid-cols-2" >
-                                <span class="t-text-[14px]" >Day</span>
-                                <span class="t-capitalize t-text-[14px]" >monday</span>
-                            </span>
-                            <span class="t-grid t-grid-cols-2" >
-                                <span class="t-text-[14px]" >Time</span>
-                                <span class="t-capitalize t-text-[14px]" >7:00 AM-10:00PM</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="t-mt-3 t-bg-white t-p-5 t-shadow t-rounded-[10px]">
-                <div class="t-grid t-grid-cols-6 t-h-[50px] t-bg-slate-300" >
-                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                        <label>Subject</label>
-                    </span>
-                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                        <label>Subject Hour</label>
-                    </span>
-                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                        <label>Total Section</label>
-                    </span>
-                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                        <label>Total Hours</label>
-                    </span>
-                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                        <label>Faculty Time given</label>
-                    </span>
-                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                        <label>Status</label>
-                    </span>
-                </div>
-                <div v-for="data in 1"  class="t-grid t-grid-cols-6 t-h-[40px] even:t-bg-white odd:t-bg-slate-100" >
-                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                        <label class="t-text-[14px]" >CC-101</label>
-                    </span>
-                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                        <label class="t-text-[14px]" >5</label>
-                    </span>
-                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                        <label class="t-text-[14px]" >2</label>
-                    </span>
-                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                        <label class="t-text-[14px]" >10</label>
-                    </span>
-                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                        <label class="t-text-[14px]" >10</label>
-                    </span>
-                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                        <label class="t-text-[14px]" >
-                            <fa icon="circle-check" class="t-text-green-400"  ></fa>
-                        </label>
-                    </span>
-                </div>
-            </div>
-            <div class="t-mt-3 t-bg-white t-rounded-[10px] t-shadow t-p-5" >
-                <div class="t-flex t-gap-2" >
-                    <button @click="change_tab('professor')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'professor'}" >
-                        <fa icon="users" ></fa>
-                        professors
-                    </button>
-                    <button @click="change_tab('section')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'section'}" >
-                        <fa icon="layer-group" ></fa>
-                        Section
-                    </button>
-                    <button @click="change_tab('classroom')" :disabled="isProcess" class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'classroom'}" >
-                        <fa icon="people-roof" ></fa>
-                        Classroom
-                    </button>
-                </div>
-                <div class="" >
-
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-<script setup>
-import { ref } from 'vue';
-import Swal from 'sweetalert2';
-
-const isProcess = ref(false);
-
-const current_tab = ref('professor');
-const change_tab = (change)=>{
-    current_tab.value = change;
+const sectionScheduleData = ref([]);
+const getSectionSchedule = async ()=>{
+    try {
+        await use_scheduleStore.getSectionSchedule(schedules.value.section)
+        sectionScheduleData.value = use_scheduleStore.getSchedule;
+        current_tab.value = "section"
+    } catch (error) {
+        console.error(error);
+    }
 }
+
+
 
 </script>

@@ -12,6 +12,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearLevelController;
 use App\Http\Controllers\OfficialTimeController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix'=>'departments'],function(){
@@ -111,38 +112,16 @@ Route::group(['prefix'=>'officialtime'],function(){
     Route::post('showDelete',[OfficialTimeController::class, 'showDelete']);
 });
 
-// Route::group(['prefix'=>'schedule'],function(){
-//     Route::post('professor', [ScheduleController::class , 'professorSchedule']);
-//     Route::post('classroom', [ScheduleController::class, 'classroomSchedule']);
-//     Route::post('section', [ScheduleController::class, 'sectionSchedule']);
-//     Route::post('create', [ScheduleController::class, 'createSchedule']);
-//     Route::post('showDelete', [ScheduleController::class, 'showDelete']);
-//     Route::get('delete/{id}', [ScheduleController::class, 'delete']);
-//     Route::get('submitSchedule', [ScheduleController::class, 'submitSchedule']);
-//     Route::post('myHour',  [ScheduleController::class, 'myTotalHours']);
-//     Route::get('approveSchedule/{tokens}',[ScheduleController::class, 'approveSchedule']);
-//     Route::post('professorLoad', [ScheduleController::class, 'professorLoad']);
+Route::group(['prefix'=>'schedules'],function(){
+    Route::get('loads/{professor}',[ScheduleController::class,'showLoad']);
+    Route::post('showClassroom',[ScheduleController::class,'showClassroom']);
+    Route::post('showSection',[ScheduleController::class,'showSection']);
+    Route::post('create_schedule',[ScheduleController::class,'create_schedule']);
 
-//     Route::post('automated',[ScheduleController::class, 'automated']);
-//     Route::post('reset',[ScheduleController::class, 'resetSchedule']);
-
-//     Route::post('notify-other-department',[ScheduleController::class,'notifyDeanOtherDepartment']);
-//     Route::post('notify-minor-to-dean',[ScheduleController::class, 'notifyMinorToDean']);
-// });
-
-// Route::group(['prefix'=>'minor'], function(){
-//     Route::get('department/{tokens}',[MinorController::class , 'departments']);
-//     Route::post('classroom',[MinorController::class, 'allClassroom']);
-//     Route::post('section',[MinorController::class, 'allSection']);
-//     Route::get('yearlevel/{department}',[MinorController::class , 'showYearlevels']);
-//     Route::get('showsubject/{department}',[MinorController::class , 'showSubjects']);
-//     Route::post('showclassroom',[MinorController::class , 'showClassrooms']);
-//     Route::get('showsection/{department}',[MinorController::class , 'showSections']);
-//     Route::post('create-schedule',[MinorController::class, 'createSchedule']);
-//     Route::post('showDelete',[MinorController::class, 'showDelete']);
-//     Route::get('delete/{id}',[MinorController::class , 'delete']);
-//     Route::get('submitSchedule',[MinorController::class , 'showSections']);
-// });
+    Route::get('professorSchedule/{professor}',[ScheduleController::class,'professorSchedule']);
+    Route::get('sectionSchedule/{section}',[ScheduleController::class,'sectionSchedule']);
+    Route::get('classroomSchedule/{classroom}',[ScheduleController::class,'classroomSchedule']);
+});
 
 // Route::group(['prefix'=>"public"],function(){
 //     Route::get('showProfessor/{department}', [publicController::class, 'showProfessor']);

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('section_openeds', function (Blueprint $table) {
+            $table->string("sectionopenedName",50)->primary();
             $table->unsignedBigInteger("sectionopenedID");
-            $table->string("sectionopenedName");
             $table->unsignedBigInteger('sectionopenedSpecialization');
             $table->boolean("sectionopenedSoftDelete")->default(false);
             $table->foreign('sectionopenedID')->references("sectionID")->on('sections')->onDelete('cascade');
