@@ -55,7 +55,16 @@ export const scheduleStore = defineStore('schedules',{
         async getSectionSchedule(section){
             const response = await apiRequest.get(`/api/schedules/sectionSchedule/${section}`);
             this.schedule = response
-        }
+        },
+        async getScheduleAvailbleDelete(professor){
+            const response = await apiRequest.get(`/api/schedules/showAvailableDelete/${professor}`);
+            this.response = response
+        },
+        async delete_schedule(id){
+            const response = await apiRequest.get(`/api/schedules/delete_schedule/${id}`);
+            this.response = response;
+            
+        },
 
         // async automation(){
         //     const formData = new FormData();

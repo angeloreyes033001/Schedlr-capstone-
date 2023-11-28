@@ -117,10 +117,12 @@ Route::group(['prefix'=>'schedules'],function(){
     Route::post('showClassroom',[ScheduleController::class,'showClassroom']);
     Route::post('showSection',[ScheduleController::class,'showSection']);
     Route::post('create_schedule',[ScheduleController::class,'create_schedule']);
+    Route::get('showAvailableDelete/{professor}',[ScheduleController::class,'showAvailableDelete']);
 
     Route::get('professorSchedule/{professor}',[ScheduleController::class,'professorSchedule']);
     Route::get('sectionSchedule/{section}',[ScheduleController::class,'sectionSchedule']);
     Route::get('classroomSchedule/{classroom}',[ScheduleController::class,'classroomSchedule']);
+    Route::get('delete_schedule/{id}',[ScheduleController::class,'delete_schedule']);
 });
 
 // Route::group(['prefix'=>"public"],function(){
