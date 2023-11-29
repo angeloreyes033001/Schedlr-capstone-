@@ -133,6 +133,9 @@ Route::group(['prefix'=>"public"],function(){
     Route::get('read_classroom/{department}',[publicController::class,'read_classroom']);
     Route::post('read_classroom_schedule',[publicController::class,'read_classroom_schedule']);
 
+    Route::get('read_section/{department}',[publicController::class, 'read_section']);
+    Route::post('read_section_schedule',[publicController::class,'read_section_schedule']);
+
     Route::post('read_print',[publicController::class,'read_print']);
 
 });

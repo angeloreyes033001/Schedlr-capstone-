@@ -81,6 +81,23 @@
                                 </classroomSchedule>
                             </div>
                         </div>
+                        <div v-if="current_tab == 'section'" class="t-mt-2" >
+                            <div class="" >
+                                <sectionSchedule
+                                :lists="computed_list" 
+                                    :department="selectedDepartment" 
+                                    :is_modal="is_modal"
+                                    :scheduleData="scheduleData"
+                                    :selectedSemester="selectedSemester"
+                                    :selectedID="selectedID"
+                                    :identifier="current_tab"
+                                    @change_id="change_id"
+                                    @open_modal="open_modal"
+                                    @read_schedule="read_schedule"
+                                    @change_semester="change_semester"    >
+                                </sectionSchedule>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,6 +114,7 @@ const use_publicStore = publicStore();
 const use_scheduleStore = scheduleStore();
 const professorSchedule = defineAsyncComponent(()=>import('../public-component/professorSchedule.vue'));
 const classroomSchedule = defineAsyncComponent(()=>import('../public-component/classroomSchedule.vue'));
+const sectionSchedule = defineAsyncComponent(()=>import('../public-component/sectionSchedule.vue'));
 
 const isProcess = ref(false);
 const isSearch = ref('');
@@ -156,6 +174,10 @@ const read_schedule = async (selected,semester)=>{
         if(current_tab.value == "classroom"){
             await use_publicStore.read_classroom_schedule({classroom:selected , semester: semester});
         }
+
+        if(current_tab.value == "section"){
+            await use_publicStore.read_section_schedule({section:selected , semester: semester});
+        }
         scheduleData.value = use_publicStore.getSchedule;
     } catch (error) {
         console.error(error)
@@ -183,6 +205,16 @@ const computed_list = computed(() => {
       return lists.value;
     }
   }
+
+  if (current_tab.value == "section") {
+    if (isSearch.value != '') {
+      return lists.value.filter((item) =>
+        item.section.toLowerCase().includes(isSearch.value.toLowerCase())
+      );
+    } else {
+      return lists.value;
+    }
+  }
 });
 const getInformation = async ()=>{
     try {
@@ -198,7 +230,8 @@ const getInformation = async ()=>{
                 lists.value = use_publicStore.getResponse;
                 break;
             case "section":
-                console.log("section",selectedDepartment.value)
+                await use_publicStore.read_section(selectedDepartment.value);
+                lists.value = use_publicStore.getResponse;
                 break;
     
             default:

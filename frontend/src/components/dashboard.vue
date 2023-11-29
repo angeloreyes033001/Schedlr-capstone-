@@ -54,12 +54,12 @@ const use_sectionStore = sectionStore();
 const use_professorStore = professorStore();
 
 const deanNavigations = ref([
-    {
-        path: '/dean/dashboard',
-        icon:'home',
-        title: 'home',
-        children: [],
-    },
+    // {
+    //     path: '/dean/dashboard',
+    //     icon:'home',
+    //     title: 'home',
+    //     children: [],
+    // },
     {
         path: '/login',
         icon:'chalkboard-user',

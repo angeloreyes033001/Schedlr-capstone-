@@ -30,6 +30,17 @@ export const publicStore = defineStore( "publics" ,{
             const response = await apiRequest.post('/api/public/read_classroom_schedule',formData);
             this.schedule = response;
         },
+        async read_section(department){
+            const response = await apiRequest.get(`/api/public/read_section/${department}`)
+            this.response = response;
+        },
+        async read_section_schedule(data){
+            const formData = new FormData();
+            formData.append('section',data.section);
+            formData.append('semester',data.semester);
+            const response = await apiRequest.post('/api/public/read_section_schedule',formData);
+            this.schedule = response;
+        },
         async read_print(data){
             const formData = new FormData();
             formData.append('id',data.id);
@@ -37,7 +48,7 @@ export const publicStore = defineStore( "publics" ,{
             formData.append('identifier',data.identifier);
             const response = await apiRequest.post('/api/public/read_print',formData);
             this.dataprint = response;
-        }
+        },
     },
     getters: {
         getResponse(state){

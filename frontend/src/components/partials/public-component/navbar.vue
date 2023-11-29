@@ -39,6 +39,11 @@
             link: '/schedule',
             icon: 'calendar-days'
         },
+        {
+            label: 'Login',
+            link: '/login',
+            icon: 'sign-in'
+        },
         
     ])
 
