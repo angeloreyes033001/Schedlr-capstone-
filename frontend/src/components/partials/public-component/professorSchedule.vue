@@ -1,5 +1,6 @@
 <template>
     <div class="t-grid t-w-full">
+        {{  }}
         <div class="t-w-full" v-if="department != ''" >
            <div v-if="lists.length > 0" >
                 <div v-for="list in lists" @click="openModal_readSchedule(list.professorID)" class="t-cursor-pointer t-p-2 t-w-full sm:t-w-[300px]  t-text-white  t-inline-block"  >
@@ -44,7 +45,7 @@
                             <option value="2nd semester" >2nd Semester</option> 
                         </select>
                     </div>
-                    <router-link :to="'/print/'+selected_schedule+'/'+selected_semester" target="_blank" class="btn btn-primary  " >
+                    <router-link :to="'/print/'+identifier+'/'+selected_schedule+'/'+selected_semester" target="_blank" class="btn btn-primary  " >
                         <span class="t-grid t-grid-cols-[30px,1fr]" >
                             <div class="t-flex t-items-center" >
                                 <fa icon="print" ></fa>
@@ -91,6 +92,10 @@ const props = defineProps({
     selectedID:{
         type: null,
         required: true
+    },
+    identifier:{
+        type:String,
+        required:true,
     }
 });
 

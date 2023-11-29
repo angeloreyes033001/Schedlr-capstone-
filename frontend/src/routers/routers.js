@@ -102,7 +102,7 @@ const routes = [
     },
     { path: '/schedule', component: ()=>import('../components/partials/public-component/public-schedule-holder.vue') },
     {
-      path: '/print/:id/:semester',
+      path: '/print/:identifier/:id/:semester',
       name: 'PrintPage',
       component: ()=>import('../components/partials/print-component/print.vue') ,
       props: true, // To pass route params as props to the component

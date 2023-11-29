@@ -30,6 +30,14 @@ export const publicStore = defineStore( "publics" ,{
             const response = await apiRequest.post('/api/public/read_classroom_schedule',formData);
             this.schedule = response;
         },
+        async read_print(data){
+            const formData = new FormData();
+            formData.append('id',data.id);
+            formData.append('semester',data.semester);
+            formData.append('identifier',data.identifier);
+            const response = await apiRequest.post('/api/public/read_print',formData);
+            this.dataprint = response;
+        }
     },
     getters: {
         getResponse(state){

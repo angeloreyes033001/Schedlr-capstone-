@@ -41,7 +41,7 @@
                             <option value="2nd semester" >2nd Semester</option> 
                         </select>
                     </div>
-                    <router-link :to="'/print/'+selected_schedule+'/'+selected_semester" target="_blank" class="btn btn-primary  " >
+                    <router-link :to="'/print/'+identifier+'/'+selected_schedule+'/'+selected_semester" target="_blank" class="btn btn-primary  " >
                         <span class="t-grid t-grid-cols-[30px,1fr]" >
                             <div class="t-flex t-items-center" >
                                 <fa icon="print" ></fa>
@@ -88,6 +88,10 @@ const props = defineProps({
     selectedID:{
         type:null,
         required: true
+    },
+    identifier:{
+        type:String,
+        required:true,
     }
 });
 
