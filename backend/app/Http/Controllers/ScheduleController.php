@@ -11,7 +11,6 @@ use App\Models\Subject;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,8 +29,8 @@ class ScheduleController extends Controller
             Log::error($e->getMessage());
         }
     }
-
     protected function showClassroom(Request $request){
+        ///department(other) // department(login)
         try{
             $validator = Validator::make($request->all(),[
                 "type"=>"required|in:lecture,laboratory",
@@ -40,15 +39,24 @@ class ScheduleController extends Controller
 
             $department = $this->tokenDepartment($request->input('tokens'));
 
-            $read = Classroom::where(["classroomType"=>$request->input('type'),"classroomDepartment"=>$department,"classroomSoftDelete"=>0])
+            $ownClassroom = Classroom::where(["classroomType"=>$request->input('type'),"classroomDepartment"=>$department,"classroomSoftDelete"=>0])
             ->select("classroomID as id","classroomName as classroom")
             ->get();
 
-            return response()->json($read);
+            $arr_classroom = array();
+            if(count($ownClassroom) > 0){
+                foreach($ownClassroom as $classroom){
+                    array_push($arr_classroom,["id"=>$classroom['id'],"classroom"=>$classroom['classroom']]);
+                }
+            }
+
+            return response()->json($arr_classroom);
+
         }
         catch(Exception $e){
             Log::error($e->getMessage());
         }
+
     }
 
     protected function showSection(Request $request){
@@ -398,35 +406,6 @@ class ScheduleController extends Controller
                 "section"=>"required",
             ]);
 
-            $currentYear = now()->format('Y');
-            $nextYear = now()->addYear()->format('Y');
-            $academicYear = $currentYear. '-'.$nextYear;
-
-            $getSemester = Subject::where(['subjectCode'=>$request->input('subject')])
-            ->select("subjectSemester as sem")
-            ->first();
-
-            $getAssignedHour = Load::where(['loadProfessor'=>$request->input('professor'),"loadSubject"=>$request->input('subject'),"loadSoftDelete"=>0])
-            ->select("loadHour as hour")->first();
-
-            $getUsedHour =  Schedule::where(['scheduleProfessor'=>$request->input('professor'),'scheduleAcademicYear'=>$academicYear,'scheduleSoftDelete'=>0])
-            ->select("scheduleDay as day","scheduleStart as start","scheduleEnd as end")
-            ->get();
-
-            $totalUsedHolder = 0;
-            if(count($getUsedHour) > 0){
-                foreach($getUsedHour as $schedule){
-                    for($i = $schedule['start'];$i <= $schedule['end'];$i++ ){
-                        $totalUsedHolder += 30;
-                    }
-                }
-            }
-            $totalUsed = Carbon::now()->addMinutes($totalUsedHolder)->diffInHours(Carbon::now());
-
-            if($totalUsed >= $getAssignedHour['hour'] ){
-                return response()->json(['status'=>false,"msg"=>"Already reach maximun givern"]);
-            }
-
             $schedules = [
                 "monday"=>[
                     "professor"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -459,6 +438,67 @@ class ScheduleController extends Controller
                     "section"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
                 ],
             ];
+
+            $currentYear = now()->format('Y');
+            $nextYear = now()->addYear()->format('Y');
+            $academicYear = $currentYear. '-'.$nextYear;
+
+            $getSemester = Subject::where(['subjectCode'=>$request->input('subject')])
+            ->select("subjectSemester as sem")
+            ->first();
+
+            $getAssignedHour = Load::where(['loadProfessor'=>$request->input('professor'),"loadSubject"=>$request->input('subject'),"loadSoftDelete"=>0])
+            ->select("loadHour as hour")->first();
+
+            $getUsedHour =  Schedule::where(['scheduleProfessor'=>$request->input('professor'),'scheduleAcademicYear'=>$academicYear,'scheduleSoftDelete'=>0])
+            ->select("scheduleDay as day","scheduleStart as start","scheduleEnd as end")
+            ->get();
+
+            $getAllowedOverlap = Classroom::where(['classroomID'=>$request->input('classroom')])
+            ->select("classroomMulti as overlap")
+            ->first();
+
+            $totalUsedHolder = 0;
+            if(count($getUsedHour) > 0){
+                foreach($getUsedHour as $schedule){
+                    for($i = $schedule['start'];$i <= $schedule['end'];$i++ ){
+                        $totalUsedHolder += 30;
+                    }
+                }
+            }
+            $totalUsed = Carbon::now()->addMinutes($totalUsedHolder)->diffInHours(Carbon::now());
+
+            if($totalUsed >= $getAssignedHour['hour'] ){
+                return response()->json(['status'=>false,"msg"=>"Already reach maximun givern"]);
+            }
+
+            $want_insert_subHour = 0;
+            for($i = $request->input('start');$i <= $request->input('end');$i++ ){
+                $want_insert_subHour += 30;
+            }
+            $convert_want_insert_subHour = Carbon::now()->addMinutes($want_insert_subHour)->diffInHours(Carbon::now());
+
+            $check_schedule_inserted = Schedule::where([
+                "scheduleSubject"=>$request->input('subject'),
+                "scheduleSection"=>$request->input('section'),
+                'scheduleAcademicYear'=>$academicYear,
+                'scheduleSoftDelete'=>0])
+            ->select("scheduleDay as day","scheduleStart as start","scheduleEnd as end")
+            ->get();
+
+            $subjecHour = 0;
+            if(count($check_schedule_inserted) > 0 ){
+                foreach($check_schedule_inserted as $schedule){
+                    for($i = $schedule['start'];$i <= $schedule['end'];$i++ ){
+                        $subjecHour += 30;
+                    }
+                    $convert_insert_time = Carbon::now()->addMinutes($subjecHour)->diffInHours(Carbon::now());
+                    if($convert_want_insert_subHour == $convert_insert_time){
+                        return response()->json(["status"=>false, "msg"=>"already assigned schedule of the subject."]);
+                    }
+                    $subjecHour = 0;
+                }
+            }
 
             $OfficialtimeProfessor = OfficialTime::where(['officialtimeProfessor'=>$request->input('professor'),"officialtimeSoftDelete"=>0])
             ->select("officialtimeDay as day","officialtimeStart as start","officialtimeEnd as end")
@@ -524,9 +564,11 @@ class ScheduleController extends Controller
                                 return response()->json(["status"=>false,"msg"=>"Classroom schedule conflict"]);
                             }
     
-                            if($schedules[$request->input('day')]['section'][$i] == 1){
-                                return response()->json(["status"=>false,"msg"=>"Section schedule conflict"]);
-                            } 
+                            if($getAllowedOverlap['overlap'] > 0){
+                                if($schedules[$request->input('day')]['section'][$i] == 1){
+                                    return response()->json(["status"=>false,"msg"=>"Section schedule conflict"]);
+                                } 
+                            }
                         }
                         else{
                             return response()->json(["status"=>false,"msg"=>"12:00nn-1:00pm are lunch time."]);

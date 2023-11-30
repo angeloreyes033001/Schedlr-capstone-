@@ -68,33 +68,33 @@
                         </div>
                         <div class="t-flex t-justify-between t-mt-3" >
                             <form @submit.prevent="create_schedule" class="t-flex t-flex-auto t-gap-2" >
-                                <div class="form-grooup" >
-                                    <select class="form-select" :disabled="isProcess || schedules.professor == '' " v-model="schedules.subject"  @change="change_load" >
+                                <div class="form-gr" >
+                                    <select @change="change_load" class="form-select" :disabled="isProcess || schedules.professor == '' " v-model="schedules.subject"   >
                                         <option value="" >Subject</option>
                                         <option v-for="loads in loadData" :value="loads.code" >{{loads.code}}</option>
                                     </select>
                                 </div>
-                                <div class="form-grooup" >
+                                <div class="form-gr" >
                                     <select @change="change_work" :disabled="isProcess || schedules.professor == '' || schedules.subject == '' "  class="form-select" v-model="schedules.work" >
                                         <option value="" disabled selected >Time</option>
                                         <option v-show="schedules.subject !='' && subjectHour.lec > 0 " value="lecture" >Lecture</option>
                                         <option v-show="schedules.subject !='' && subjectHour.lab > 0 " value="laboratory" >Laboratory</option>
                                     </select>
                                 </div>
-                                <div class="form-grooup" >
+                                <div class="form-gr" >
                                     <select @change="getClassroomSchedule" :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == ''" class="form-select t-capitalize" v-model="schedules.classroom" >
                                         <option class="t-capitalize" disabled select value="" >Classroom</option>
                                         <option class="t-capitalize" v-for="classroom in classroomData" :value="classroom.id" >{{ classroom.classroom }}</option>
                                     </select>
                                 </div>
-                                <div class="form-grooup" >
+                                <div class="form-gr" >
                                     <select @change="getSectionSchedule" :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == '' || schedules.classroom == ''" class="form-select" v-model="schedules.section" >
                                         <option value="" selected disabled >Section</option>
                                         <option v-for="section in sectionData" :value="section.section" >{{ section.section }}</option>
                                         
                                     </select>
                                 </div>
-                                <div class="form-grooup" >
+                                <div class="form-gr" >
                                     <select :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == '' || schedules.classroom == '' || schedules.section == '' " class="form-select" v-model="schedules.day" >
                                         <option value="" >Day</option>
                                         <option value="monday" >Monday</option>
@@ -105,12 +105,12 @@
                                         <option value="saturday" >Saturday</option>
                                     </select>
                                 </div>
-                                <div class="form-grooup" >
+                                <div class="form-gr" >
                                     <select @change="filterTime" :disabled="isProcess||schedules.professor == ''||schedules.subject == ''||schedules.timeWork == '' || schedules.classroom == '' || schedules.section == '' || schedules.day == '' " class="form-select t-capitalize" v-model="schedules.start" >
                                         <option class="t-capitalize" v-for="time in timers" :key="time.id" :value="time.id" >{{ time.label }}</option>
                                     </select>
                                 </div>
-                                <div class="form-grooup" >
+                                <div class="form-gr" >
                                     <select class="form-select" disabled v-model="schedules.end" >
                                         <option class="" value="" >End Time</option>
                                         <option class="t-capitalize" v-for="time in endTime" :key="time.id" :value="time.id" >{{ time.label }}</option>
@@ -236,7 +236,6 @@ const function_hide_modal_delete = ()=>{
     showModalDelete.value = false;
 }
 
-
 const globalProfessorData = inject('globalProfessorData');   
 const professorData = ref(globalProfessorData);
 const computedProfessor = computed(()=>{
@@ -283,23 +282,19 @@ const filterTime = ()=>{
     }else{
         time = subjectHour.value.lab * 2;
     }
-    console.log(time)
+
     let total = (schedules.value.start + time) ;
     let data = timers.value.filter((item)=>item.id >= (schedules.value.start + time) && item.id <= 30 );
-    console.log(data)
-if(data.length ==0){
-    data = timers.value.filter((item)=>item.id>=(30-time)&&item.id<=30)
-    schedules.value.end = 30;
-    schedules.value.start = data[0].id;
-}else{
-
-    schedules.value.end = total;
-}
-console.log(data)
-endTime.value = data;
-
     
+    if(data.length ==0){
+        data = timers.value.filter((item)=>item.id>=(30-time)&&item.id<=30)
+        schedules.value.end = 30;
+        schedules.value.start = data[0].id;
+    }else{
 
+        schedules.value.end = total;
+    }
+    endTime.value = data;
 }
 
 const schedules = ref({

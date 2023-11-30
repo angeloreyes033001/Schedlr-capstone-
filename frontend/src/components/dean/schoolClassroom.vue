@@ -15,15 +15,10 @@
                             <input :disabled="isProcess || isEditMode != ''" v-model="isSearch" class="form-control t-capitalize" placeholder="Search" type="text" >
                         </div>
                     </div>
-                    <div class="t-h-[60px] t-bg-logoBlue t-p-2 t-rounded-tl-[10px] t-rounded-tr-[10px] t-grid t-grid-cols-5">
+                    <div class="t-h-[60px] t-bg-logoBlue t-p-2 t-rounded-tl-[10px] t-rounded-tr-[10px] t-grid t-grid-cols-4">
                         <div class="t-h-full" >
                             <div class="t-flex t-items-center t-h-full" >
                                 <label class="t-uppercase t-text-white t-font-bold" >Classroom</label>
-                            </div>
-                        </div>
-                        <div class="t-h-full" >
-                            <div class="t-flex t-items-center t-h-full" >
-                                <label class="t-uppercase t-text-white t-font-bold" >Year</label>
                             </div>
                         </div>
                         <div class="t-h-full" >
@@ -42,7 +37,7 @@
                             </div>
                         </div>
                     </div>
-                    <div  class="t-grid t-grid-cols-5 t-h-[60px] t-bg-slate-50 t-rounded-[5px] t-mt-2 t-mb-1 t-p-2 t-border"
+                    <div  class="t-grid t-grid-cols-4 t-h-[60px] t-bg-slate-50 t-rounded-[5px] t-mt-2 t-mb-1 t-p-2 t-border"
                     v-for="classroom in computed_classroom" :key="classroom.id" >
                         <div class="t-flex t-items-center t-h-full" >
                             <label v-if="isEditMode != classroom.id" class="t-capitalize t-font-normal text-muted t-truncate" :title="classroom.room" >{{ classroom.room }}</label>

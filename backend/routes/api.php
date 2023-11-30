@@ -4,6 +4,7 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\LoadController;
+use App\Http\Controllers\MinorController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RankController;
 use App\Http\Controllers\SectionController;
@@ -138,4 +139,10 @@ Route::group(['prefix'=>"public"],function(){
 
     Route::post('read_print',[publicController::class,'read_print']);
 
+});
+
+Route::group(['prefix'=>"minors"],function(){
+    Route::get('read_professor/{tokens}',[ MinorController::class,'read_professor' ]);
+    Route::post('read_classroom',[MinorController::class,'read_classroom']);
+    Route::post('read_section',[MinorController::class,'read_section']);
 });
