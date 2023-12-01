@@ -13,6 +13,48 @@
                         </div>
                     </div>
                     <hr>
+                    <div class="t-grid t-grid-cols-[200px,1fr] t-mb-5" >
+                        <div  class="t-flex t-items-center t-justify-center" >
+                            <div class="p-2 t-w-full t-h-full" >
+                                <div class="t-flex t-justify-center" >
+                                    <img src="../../assets/images/profile.png" class="t-w-[140px] t-rounded-[50%] t-shadow" >
+                                </div>
+                                <h6 class="text-center t-capitalize t-mt-2" >{{ schedules.professor }}</h6>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="t-mt-3 t-bg-white t-p-5 t-shadow t-rounded-[10px]">
+                                <div class="t-grid t-grid-cols-4 t-h-[50px] t-bg-slate-300" >
+                                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                        <label>Subject</label>
+                                    </span>
+                                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                        <label>Assigned Hour</label>
+                                    </span>
+                                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                        <label>Lec Hour's</label>
+                                    </span>
+                                    <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                        <label>Lab Hour's</label>
+                                    </span>
+                                </div>
+                                <div v-for="loads in loadData"  class="t-grid t-grid-cols-4 t-h-[40px] even:t-bg-white odd:t-bg-slate-100" >
+                                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                        <label class="t-text-[14px]" >{{ loads.code }}</label>
+                                    </span>
+                                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                        <label class="t-text-[14px]" >{{ loads.givenHour }}</label>
+                                    </span>
+                                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                        <label class="t-text-[14px]" >{{ loads.lec }}</label>
+                                    </span>
+                                    <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                        <label class="t-text-[14px]" >{{ loads.lab }}</label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="t-flex t-justify-between t-gap-2" >
                         <div class="t-flex t-gap-2" >
                             <button @click="change_tab('professor')" :disabled="isProcess || selectedDepartment == '' " class="t-w-[200px] btn" :class="{'btn-primary': current_tab === 'professor' , 'btn-outline-secondary': current_tab != 'professor'}" >
@@ -32,7 +74,7 @@
                             <div class="t-relative" >
                                 <button 
                                     @click="function_modal_add"
-                                    :disabled="isProcess || selectedDepartment == ''"  
+                                    :disabled="isProcess || selectedDepartment == '' ||  modal_delete"  
                                     class="btn btn-primary" >
                                         <fa icon="plus"></fa>
                                         Schedule
@@ -154,18 +196,73 @@
                                     </div>
                                 </div>
                             </div>
-                            <button 
-                                :disabled="isProcess || selectedDepartment == '' || schedules.professor == ''" 
-                                class="btn btn-danger" >
-                                    <fa icon="trash"></fa>
-                                    Remove
-                            </button>
+                            <div class="t-relative" >
+                                <button 
+                                    @click="function_modal_delete"
+                                    :disabled="isProcess || selectedDepartment == '' ||  modal_add " 
+                                    class="btn btn-danger" >
+                                        <fa icon="trash"></fa>
+                                        Remove
+                                </button>
+                                <div v-show="modal_delete" class="t-absolute t-bg-slate-200 t-shadow  t-w-[300px] t-h-[560px] t-rounded-[10px] t-z-10 t-top-[50px] t-left-[-185px] t-p-3 t-grid t-grid-rows-[180px,1fr]" >
+                                    <div class="t-relative" >
+                                        <div class="t-p-2 t-grid t-justify-center" >
+                                            <span class="text-center" >
+                                                <div class="t-relative" >
+                                                    <img src="../../assets/images/profile.png" alt="profile" class="t-h-[100px]" >
+                                                    <div v-if="schedules.professor != ''" @click="remove_selected_professor" class="t-cursor-pointer t-absolute t-items-center t-justify-center t-rounded-[50%] t-top-0 t-right-0 t-h-[40px] t-w-[40px] t-bg-white t-shadow" >
+                                                        <fa icon="close" class="t-mt-3 text-danger" ></fa>
+                                                    </div>
+                                                </div>
+                                                <label class="t-mt-2" >
+                                                    <span v-if="schedules.professor != ''" class="t-uppercase" >{{ schedules.professor }}</span>
+                                                    <span v-else class="t-font-bold" >N/A</span>
+                                                </label>
+                                            </span>
+                                        </div>
+                                        <div v-if="schedules.professor ==''"  class="t-mb-1" >
+                                            <input v-model="isSearch" class="form-control t-capitalize" placeholder="Search" >
+                                        </div>
+                                    </div>
+                                    <div class="t-h-full t-overflow-auto t-mt-3" >
+                                        <div class="t-h-full" v-if="schedules.professor == ''" >
+                                            <div v-for="professor in computed_professor" @click="selectProfessor(professor.professorID)" class=" t-cursor-pointer t-mb-2 t-p-2 t-bg-white t-rounded-[5px] t-h-[80px] t-grid t-grid-cols-[50px,1fr] t-gap-2" >
+                                                <div class="t-flex t-items-center t-justify-center" >
+                                                    <img src="../../assets/images/profile.png" >
+                                                </div>
+                                                <div class="t-grid t-items-center" >
+                                                    <div class="t-overflow-hidden" >
+                                                        <h6 class="t-font-bold t-m-0 t-p-0 t-capitalize t-truncate" >{{ professor.fullname }}</h6>
+                                                        <small class="t-uppercase" >{{ professor.professorID }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-else class="" >
+                                            <div v-for="schedule in ShowAvailableDeleteData" class="t-p-3 t-bg-white t-rounded-[10px] t-h-[85px] t-mt-2 t-mb-2 " >
+                                                <div class=" t-grid t-grid-cols-[1fr,40px]" >
+                                                    <span>
+                                                        <h6 class="t-p-0 t-m-0 t-uppercase" >{{schedule.subject}}</h6>
+                                                        <h6 class=" t-font-extralight t-text-[14px] t-uppercase t-p-0 t-m-0" ><strong>{{schedule.section}}</strong>({{ schedule.classroom }})</h6>
+                                                        <h6 class=" t-font-extralight t-text-[14px] t-uppercase t-p-0 t-m-0" ><strong>{{schedule.day}}</strong>({{ schedule.time }})</h6>
+                                                    </span>
+                                                    <div  class="t-flex t-items-center t-justify-center" >
+                                                        <button @click="delete_schedule(schedule.id)" class="btn btn-danger" >
+                                                            <fa icon="trash" ></fa>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr>
                     <div v-if="selectedDepartment != ''" class="" >
                         <div v-if="current_tab == 'professor' " class="t-mt-2" >
-                            <div v-if="professorScheduleData.length > 0" class="" >
+                            <div v-if="professorScheduleData.length > 0 " class="" >
                                 <scheduleComponent :schedules="professorScheduleData" ></scheduleComponent>
                             </div>
                             <div v-else class=" t-justify-center t-items-center t-w-full p-5 t-grid" >
@@ -294,6 +391,20 @@ const function_modal_add = ()=>{
     }
 }
 
+const modal_delete = ref(false);
+const function_modal_delete = ()=>{
+    if(modal_delete.value){
+        modal_delete.value =false;
+        schedules.value.professor = '';
+        professorScheduleData.value = [];
+        loadData.value = []
+    }
+    else{
+        modal_delete.value = true;
+        getProfessor();
+    }
+}
+
 const professorData = ref([]);
 const computed_professor = computed(() => {
     if (isSearch.value !== '') {
@@ -316,6 +427,9 @@ const selectProfessor = (professor)=>{
     schedules.value.professor = professor;
     getLoads();
     getProfessorSchedule()
+    if(modal_delete.value){
+        getShowAvailableDelete()
+    }
 }
 
 const remove_selected_professor= ()=>{
@@ -410,26 +524,6 @@ const getSections = async()=>{
     }
 }
 
-const create_schedule = ()=>{
-    try {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes,Save it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log({...schedules.value})
-            }
-        });
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 const professorScheduleData = ref([]);
 const getProfessorSchedule = async ()=>{
     try {
@@ -460,6 +554,92 @@ const getSectionSchedule = async ()=>{
         current_tab.value = "section"
     } catch (error) {
         console.error(error);
+    }
+}
+
+const create_schedule = async()=>{
+    try {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes,Save it!"
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                await  use_scheduleStore.create_schedule({
+                    day:schedules.value.day,
+                    start: schedules.value.start,
+                    end: schedules.value.end,
+                    professor: schedules.value.professor,
+                    subject: schedules.value.subject,
+                    classroom: schedules.value.classroom,
+                    section: schedules.value.section
+                });
+
+                const response = use_scheduleStore.getResponse;
+                if(response.status){
+                    getProfessorSchedule();
+                    getClassroomSchedule();
+                    getSectionSchedule();
+                    Swal.fire('Success',response.msg,'success');
+                }
+                else{
+                    Swal.fire("Error",response.msg,"error");
+                }
+            }
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+// const showDeleteData = ()=>{
+//     getShowAvailableDelete()
+//     function_show_modal_delete()
+// }
+
+const ShowAvailableDeleteData = ref([]);
+const getShowAvailableDelete= async()=>{
+    try {
+        isProcess.value = true;
+        await use_scheduleStore.getScheduleAvailbleDelete(schedules.value.professor);
+        ShowAvailableDeleteData.value = use_scheduleStore.getResponse;
+        isProcess.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const delete_schedule = async(id)=>{
+    try {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                isProcess.value = true;
+
+                await use_scheduleStore.delete_schedule(id);
+                const response = use_scheduleStore.getResponse;
+                if(response.status){
+                    getShowAvailableDelete();
+                    getProfessorSchedule();
+                    Swal.fire("Success",response.msg,'success');
+                }
+
+                isProcess.value = false;
+            }
+        });
+    } catch (error) {
+        console.error(error)
     }
 }
 

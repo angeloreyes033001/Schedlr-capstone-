@@ -16,19 +16,17 @@
                                 </div>
                                 <hr>
                                 <div v-for="professor in computedProfessor" @click="selectedProfessor(professor.professorID)" class=" t-cursor-pointer t-relative t-w-full t-mt-2 t-bg-slate-100 t-p-2 t-rounded-[10px]" >
-                                    <div class="t-flex" >
+                                    <div class="t-flex t-gap-3" >
                                         <div class="" >
                                             <img src="../../assets/images/profile.png"  class="t-h-[80px]">
                                         </div>
                                         <div class="t-flex t-items-center" >
                                             <div class="" >
-                                                <div class="t-grid t-grid-cols-2 t-gap-1" >
-                                                    <span>ID:</span>
-                                                    <span>{{ professor.professorID }}</span>
+                                                <div class="" >
+                                                    <h6 class="t-trucante t-capitalize t-m-0 t-p-0" >{{ professor.fullname }}</h6>
                                                 </div>
-                                                <div class="t-grid t-grid-cols-2 t-gap-1" >
-                                                    <span>Fulname:</span>
-                                                    <span>{{ professor.fullname }}</span>
+                                                <div class="" >
+                                                    <span class="t-uppercase t-text-[14px] t-font-extralight t-m-0 t-p-0" >{{ professor.professorID }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -36,34 +34,46 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="t-mt-3 t-bg-white t-p-5 t-shadow t-rounded-[10px]">
-                            <div class="t-grid t-grid-cols-4 t-h-[50px] t-bg-slate-300" >
-                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                                    <label>Subject</label>
-                                </span>
-                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                                    <label>Assigned Hour</label>
-                                </span>
-                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                                    <label>Lec Hour's</label>
-                                </span>
-                                <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
-                                    <label>Lab Hour's</label>
-                                </span>
+                        <div class="t-grid t-grid-cols-[200px,1fr] t-mb-5" >
+                            <div  class="t-flex t-items-center t-justify-center" >
+                                <div class="p-2 t-w-full t-h-full" >
+                                    <div class="t-flex t-justify-center" >
+                                        <img src="../../assets/images/profile.png" class="t-w-[140px] t-rounded-[50%] t-shadow" >
+                                    </div>
+                                    <h6 class="text-center t-capitalize t-mt-2" >{{ schedules.professor }}</h6>
+                                </div>
                             </div>
-                            <div v-for="loads in loadData"  class="t-grid t-grid-cols-4 t-h-[40px] even:t-bg-white odd:t-bg-slate-100" >
-                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                                    <label class="t-text-[14px]" >{{ loads.code }}</label>
-                                </span>
-                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                                    <label class="t-text-[14px]" >{{ loads.givenHour }}</label>
-                                </span>
-                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                                    <label class="t-text-[14px]" >{{ loads.lec }}</label>
-                                </span>
-                                <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
-                                    <label class="t-text-[14px]" >{{ loads.lab }}</label>
-                                </span>
+                            <div>
+                                <div class="t-mt-3 t-bg-white t-p-5 t-shadow t-rounded-[10px]">
+                                    <div class="t-grid t-grid-cols-4 t-h-[50px] t-bg-slate-300" >
+                                        <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                            <label>Subject</label>
+                                        </span>
+                                        <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                            <label>Assigned Hour</label>
+                                        </span>
+                                        <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                            <label>Lec Hour's</label>
+                                        </span>
+                                        <span class="t-h-full t-font-semibold t-flex t-items-center t-pl-[5px]">
+                                            <label>Lab Hour's</label>
+                                        </span>
+                                    </div>
+                                    <div v-for="loads in loadData"  class="t-grid t-grid-cols-4 t-h-[40px] even:t-bg-white odd:t-bg-slate-100" >
+                                        <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                            <label class="t-text-[14px]" >{{ loads.code }}</label>
+                                        </span>
+                                        <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                            <label class="t-text-[14px]" >{{ loads.givenHour }}</label>
+                                        </span>
+                                        <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                            <label class="t-text-[14px]" >{{ loads.lec }}</label>
+                                        </span>
+                                        <span class="t-h-full t-font-extralight t-flex t-items-center t-pl-[5px]" >
+                                            <label class="t-text-[14px]" >{{ loads.lab }}</label>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="t-flex t-justify-between t-mt-3" >
