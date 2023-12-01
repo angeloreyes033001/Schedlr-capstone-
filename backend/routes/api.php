@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\LoadController;
 use App\Http\Controllers\MinorController;
 use App\Http\Controllers\ProfessorController;
@@ -145,4 +146,15 @@ Route::group(['prefix'=>"minors"],function(){
     Route::get('read_professor/{tokens}',[ MinorController::class,'read_professor' ]);
     Route::post('read_classroom',[MinorController::class,'read_classroom']);
     Route::post('read_section',[MinorController::class,'read_section']);
+});
+
+Route::group(['prefix'=>"generals"],function(){
+    Route::get('total_subject/{tokens}', [ GeneralController::class, 'total_subjects' ]);
+    Route::get('total_classroom/{tokens}', [ GeneralController::class, 'total_classrooms' ]);
+
+    Route::get('total_admin/{tokens}', [ GeneralController::class, 'total_admins' ]);
+
+    Route::get('show_public_schedule/{tokens}',[GeneralController::class,'show_schedule_public']);
+    Route::get('hidden_public_schedule/{tokens}',[GeneralController::class,'hidden_public_schedule']);
+    Route::post('dean_to_otherDepartment',[GeneralController::class,'dean_to_otherDepartment']);
 });

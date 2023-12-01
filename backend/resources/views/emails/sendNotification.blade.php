@@ -1,8 +1,8 @@
 <x-mail::message>
-# {{$other_dep}} Department.
+#Good day, {{$other_dep}} Department.
 
-You can add your schedule in {{$department}} Department.
+You authorize to add schedule in  {{$department}} department.
 
-Thanks,<br>
+Thank You,<br>
 {{ config('app.name') }}
 </x-mail::message>

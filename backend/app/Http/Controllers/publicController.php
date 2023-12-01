@@ -74,7 +74,13 @@ class publicController extends Controller
         $nextYear = now()->addYear()->format('Y');
         $academicYear = $currentYear. '-'.$nextYear;
 
-        $professorSchedule = Schedule::where(['scheduleProfessor'=>$professor, "scheduleSemester"=>$semester, 'scheduleAcademicYear'=>$academicYear ,'scheduleSoftDelete'=>0,'classroomSoftDelete'=>0])
+        $professorSchedule = Schedule::where([
+            'scheduleProfessor'=>$professor, 
+            "scheduleSemester"=>$semester, 
+            'scheduleAcademicYear'=>$academicYear ,
+            "scheduleApproved"=>1,
+            'scheduleSoftDelete'=>0,
+            'classroomSoftDelete'=>0])
         ->join("classrooms","scheduleClassroom","=","classroomID")
         ->join('professors','scheduleProfessor','professorID')
         ->select(
@@ -176,7 +182,13 @@ class publicController extends Controller
         $nextYear = now()->addYear()->format('Y');
         $academicYear = $currentYear. '-'.$nextYear;
 
-        $classroomSchedule = Schedule::where(['scheduleClassroom'=>$classroom, "scheduleSemester"=>$semester, 'scheduleAcademicYear'=>$academicYear ,'scheduleSoftDelete'=>0,'classroomSoftDelete'=>0])
+        $classroomSchedule = Schedule::where([
+            'scheduleClassroom'=>$classroom, 
+            "scheduleSemester"=>$semester, 
+            'scheduleAcademicYear'=>$academicYear ,
+            "scheduleApproved"=>1,
+            'scheduleSoftDelete'=>0,
+            'classroomSoftDelete'=>0])
         ->join("classrooms","scheduleClassroom","=","classroomID")
         ->join('professors','scheduleProfessor','professorID')
         ->select(
@@ -281,7 +293,13 @@ class publicController extends Controller
         $nextYear = now()->addYear()->format('Y');
         $academicYear = $currentYear. '-'.$nextYear;
 
-        $sectionSchedule = Schedule::where(['scheduleSection'=>$section, "scheduleSemester"=>$semester, 'scheduleAcademicYear'=>$academicYear ,'scheduleSoftDelete'=>0,'classroomSoftDelete'=>0])
+        $sectionSchedule = Schedule::where([
+            'scheduleSection'=>$section, 
+            "scheduleSemester"=>$semester, 
+            'scheduleAcademicYear'=>$academicYear ,
+            "scheduleApproved"=>1,
+            'scheduleSoftDelete'=>0,
+            'classroomSoftDelete'=>0])
         ->join("classrooms","scheduleClassroom","=","classroomID")
         ->join('professors','scheduleProfessor','professorID')
         ->select(
@@ -398,7 +416,13 @@ class publicController extends Controller
 
                     $name = $professor->name;
 
-                    $professorSchedule = Schedule::where(['scheduleProfessor'=>$request->input('id'), "scheduleSemester"=>$request->input('semester'), 'scheduleAcademicYear'=>$academicYear ,'scheduleSoftDelete'=>0,'classroomSoftDelete'=>0])
+                    $professorSchedule = Schedule::where([
+                        'scheduleProfessor'=>$request->input('id'), 
+                        "scheduleSemester"=>$request->input('semester'), 
+                        'scheduleAcademicYear'=>$academicYear ,
+                        "scheduleApproved"=>1,
+                        'scheduleSoftDelete'=>0,
+                        'classroomSoftDelete'=>0])
                     ->join("classrooms","scheduleClassroom","=","classroomID")
                     ->join('professors','scheduleProfessor','professorID')
                     ->select(
@@ -448,7 +472,13 @@ class publicController extends Controller
 
                     $name = $classroom->name;
 
-                    $classroomSchedule = Schedule::where(['scheduleClassroom'=>$request->input('id'), "scheduleSemester"=>$request->input('semester'), 'scheduleAcademicYear'=>$academicYear ,'scheduleSoftDelete'=>0,'classroomSoftDelete'=>0])
+                    $classroomSchedule = Schedule::where([
+                        'scheduleClassroom'=>$request->input('id'), 
+                        "scheduleSemester"=>$request->input('semester'), 
+                        'scheduleAcademicYear'=>$academicYear ,
+                        "scheduleApproved"=>1,
+                        'scheduleSoftDelete'=>0,
+                        'classroomSoftDelete'=>0])
                     ->join("classrooms","scheduleClassroom","=","classroomID")
                     ->join('professors','scheduleProfessor','professorID')
                     ->select(
@@ -494,7 +524,13 @@ class publicController extends Controller
 
                     $name = $request->input('id');
 
-                    $sectionSchedule = Schedule::where(['scheduleSection'=>$request->input('id'), "scheduleSemester"=>$request->input('semester'), 'scheduleAcademicYear'=>$academicYear ,'scheduleSoftDelete'=>0,'classroomSoftDelete'=>0])
+                    $sectionSchedule = Schedule::where([
+                        'scheduleSection'=>$request->input('id'), 
+                        "scheduleSemester"=>$request->input('semester'), 
+                        'scheduleAcademicYear'=>$academicYear ,
+                        "scheduleApproved"=>1,
+                        'scheduleSoftDelete'=>0,
+                        'classroomSoftDelete'=>0])
                     ->join("classrooms","scheduleClassroom","=","classroomID")
                     ->join('professors','scheduleProfessor','professorID')
                     ->select(
