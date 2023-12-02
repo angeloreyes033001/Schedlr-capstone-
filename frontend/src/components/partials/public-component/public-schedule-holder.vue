@@ -13,7 +13,6 @@
                     <div class="" >
                         <router-link to="/" class="btn btn-outline-secondary t-w-[200px]" >
                             <fa icon="reply"></fa>
-                            Home
                         </router-link>
                     </div>
                 </div>

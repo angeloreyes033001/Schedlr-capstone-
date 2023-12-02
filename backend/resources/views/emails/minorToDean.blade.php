@@ -1,14 +1,10 @@
 <x-mail::message>
-# Good day, {{$other_dep}}
+# Good day, {{$other_dep}} Department
 
-We already done to adding our schedule.
+We already done to adding schedule.
 
---{{$department}}
+From: {{$department}} Department.
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
-
-Thanks,<br>
+Thanks You<br>
 {{ config('app.name') }}
 </x-mail::message>

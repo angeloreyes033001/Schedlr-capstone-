@@ -257,6 +257,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="t-relative" >
+                                <button 
+                                    @click="minor_to_otherDepartment"
+                                    :disabled="isProcess || selectedDepartment == '' || isSending" 
+                                    class="btn btn-success" >
+                                        <span v-if="isSending" >
+                                            <fa icon="spinner"></fa>
+                                        </span>
+                                        <span v-else >
+                                            <fa icon="paper-plane"></fa>
+                                        </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <hr>
@@ -304,12 +317,14 @@
 import {ref,inject,computed,defineAsyncComponent} from 'vue';
 import {minorStore} from '../../services/minors.js';
 import {scheduleStore} from '../../services/schedule';
+import { generalStore } from '../../services/general.js';
 import Swal from 'sweetalert2';
 
 const scheduleComponent = defineAsyncComponent(()=>import('../partials/schedule-component/schedule.vue'))
 
 const use_minorStore = minorStore();
 const use_scheduleStore = scheduleStore();
+const use_generalStore = generalStore();
 
 const globalDepartmentData = inject("globalDepartmentData");
  const departmentData = ref(globalDepartmentData);
@@ -640,6 +655,35 @@ const delete_schedule = async(id)=>{
         });
     } catch (error) {
         console.error(error)
+    }
+}
+
+const isSending = ref(false);
+const minor_to_otherDepartment = ()=>{
+    try {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Please click confirm if the schedule is already finalize.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Confirm"
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                isProcess.value = true;
+                isSending.value = true;
+                await use_generalStore.minor_to_otherDepartment(selectedDepartment.value);
+                const response = use_generalStore.getResponse;
+                if(response.status){
+                    Swal.fire("Success",response.msg,'success')
+                }
+                isSending.value = false;
+                isProcess.value = false;
+            }
+        });
+    } catch (error) {
+        console.error(error);
     }
 }
 

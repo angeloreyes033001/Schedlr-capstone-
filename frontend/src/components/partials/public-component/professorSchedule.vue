@@ -16,12 +16,12 @@
                 </div>
            </div>
            <div v-else class=" t-justify-center t-items-center t-w-full p-5 t-grid" >
-                <img class="t-w-[400px] t-border-2 t-border-white t-border-b-slate-300" src="../../../assets/images/no-selected.png" alt="no-data">
+                <img class="t-w-[400px] t-border-2 t-border-white t-border-b-slate-300" src="../../../assets/images/no-data.svg" alt="no-data">
                 <small class="text-center t-capitalize t-mt-2" >No Data Found.</small>
             </div> 
         </div>
         <div v-else class=" t-justify-center t-items-center t-w-full p-5 t-grid" >
-            <img class="t-w-[400px] t-border-2 t-border-white t-border-b-slate-300" src="../../../assets/images/no-data.svg" alt="no-data">
+            <img class="t-w-[400px] t-border-2 t-border-white t-border-b-slate-300" src="../../../assets/images/no-department.png" alt="no-data">
             <small class="text-center t-capitalize t-mt-2" >Please select department first.</small>
         </div> 
     </div>

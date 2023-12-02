@@ -138,6 +138,8 @@ Route::group(['prefix'=>"public"],function(){
     Route::get('read_section/{department}',[publicController::class, 'read_section']);
     Route::post('read_section_schedule',[publicController::class,'read_section_schedule']);
 
+    Route::post('read_professor_schedule_dean',[publicController::class,'read_professor_schedule_dean']);
+
     Route::post('read_print',[publicController::class,'read_print']);
 
 });
@@ -151,10 +153,12 @@ Route::group(['prefix'=>"minors"],function(){
 Route::group(['prefix'=>"generals"],function(){
     Route::get('total_subject/{tokens}', [ GeneralController::class, 'total_subjects' ]);
     Route::get('total_classroom/{tokens}', [ GeneralController::class, 'total_classrooms' ]);
+    Route::get('total_section/{tokens}', [ GeneralController::class, 'total_sections' ]);
 
     Route::get('total_admin/{tokens}', [ GeneralController::class, 'total_admins' ]);
 
     Route::get('show_public_schedule/{tokens}',[GeneralController::class,'show_schedule_public']);
     Route::get('hidden_public_schedule/{tokens}',[GeneralController::class,'hidden_public_schedule']);
     Route::post('dean_to_otherDepartment',[GeneralController::class,'dean_to_otherDepartment']);
+    Route::post('minor_to_otherDepartment',[GeneralController::class,'minor_to_otherDepartment']);
 });

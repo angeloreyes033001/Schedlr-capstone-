@@ -583,4 +583,94 @@ class publicController extends Controller
         }
     }
 
+    protected function read_professor_schedule_dean(Request $request){
+        $schedules = [
+            "monday"=>[
+                "professor"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "classroom"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "section"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            "tuesday"=>[
+                "professor"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "classroom"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "section"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            "wednesday"=>[
+                "professor"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "classroom"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "section"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            "thursday"=>[
+                "professor"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "classroom"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "section"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            "friday"=>[
+                "professor"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "classroom"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "section"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            "saturday"=>[
+                "professor"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "classroom"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "section"=>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+        ];
+
+        $professor = $request->input('professor');
+        $semester = $request->input('semester');
+
+        $currentYear = now()->format('Y');
+        $nextYear = now()->addYear()->format('Y');
+        $academicYear = $currentYear. '-'.$nextYear;
+
+        $professorSchedule = Schedule::where([
+            'scheduleProfessor'=>$professor, 
+            "scheduleSemester"=>$semester, 
+            'scheduleAcademicYear'=>$academicYear ,
+            'scheduleSoftDelete'=>0,
+            'classroomSoftDelete'=>0])
+        ->join("classrooms","scheduleClassroom","=","classroomID")
+        ->join('professors','scheduleProfessor','professorID')
+        ->select(
+            "scheduleDay as day",
+            "scheduleStart as start",
+            "scheduleEnd as end",
+            "scheduleID as id",
+            "scheduleSubject as subject",
+            "scheduleSection as section",
+            "classroomName as classroom",
+            "professorFullname as professor",
+            )
+        ->get();
+
+        if(count($professorSchedule) > 0){
+            foreach($professorSchedule as $schedule){
+                for($i = $schedule['start'];$i <= $schedule['end'];$i++ ){
+                    $schedules[$schedule['day']]['professor'][$i] = [
+                        "id"=>$schedule['id'],
+                        "subject"=>$schedule['subject'],
+                        "section"=>$schedule['section'],
+                        "classroom"=>$schedule['classroom'],
+                        "professor"=>$schedule['professor']
+                    ];
+                }
+            }
+        }
+
+        $output = array();
+        foreach($this->times as $i=>$time){
+            array_push($output, [
+                "time"=>$time,
+                "monday"=>$schedules['monday']['professor'][$i],
+                "tuesday"=>$schedules['tuesday']['professor'][$i],
+                "wednesday"=>$schedules['wednesday']['professor'][$i],
+                "thursday"=>$schedules['thursday']['professor'][$i],
+                "friday"=>$schedules['friday']['professor'][$i],
+                "saturday"=>$schedules['saturday']['professor'][$i]
+            ]);
+        }
+        return response()->json($output);
+    }
+
 }

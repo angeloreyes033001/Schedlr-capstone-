@@ -1,8 +1,8 @@
 <template  >
     <template v-if="computingLoading" >
-        <section class="t-h-screen t-grid t-justify-center t-items-center" >
+        <section class="t-h-screen t-grid t-justify-center t-items-center t-bg-slate-400" >
             <div class="" >
-                Loading...
+                <animation></animation>
             </div>
         </section>
     </template>
@@ -27,7 +27,8 @@ import { subjectStore } from '../services/subjects';
 // import { sectionStore } from '../services/sections';
 import { professorStore } from '../services/professors';
 import {rankStore } from '../services/ranks.js';
-const sidebarComponent = defineAsyncComponent(()=>import('./partials/sidebar.vue'))
+const sidebarComponent = defineAsyncComponent(()=>import('./partials/sidebar.vue'));
+const animation = defineAsyncComponent(()=>import('./partials/animation/animation.vue'));
 
 const use_departmentStore = departmentStore();
 const use_yearlevelStore = yearlevelStore();

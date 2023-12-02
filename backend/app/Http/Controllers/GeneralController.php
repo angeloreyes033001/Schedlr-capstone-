@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendNotification;
+use App\Mail\MinorToDean;
 use App\Models\Classroom;
 use App\Models\Schedule;
+use App\Models\sections;
+use App\Models\section_opened;
 use App\Models\Subject;
 use App\Models\User;
 use Exception;
@@ -40,17 +43,30 @@ class GeneralController extends Controller
         }
     }
 
-    protected function totalSection($tokens){
-        // try{
-        //     $department = $this->tokenDepartment($tokens);
-        //     $totals = Classroom::where(['classroomDepartment'=>$department,"classroomSoftDelete"=>0])
-        //     ->count();
+    protected function total_sections($tokens){
+        try{
+            $department = $this->tokenDepartment($tokens);
+            $sections = sections::where(['sectionDepartment'=>$department, "sectionSoftDelete"=>0])
+            ->select("sectionID as id")
+            ->get();
 
-        //     return response()->json($totals);
-        // }
-        // catch(Exception $e){
-        //     Log::error($e->getMessage());
-        // }
+            $arr_section = array();
+            if(count($sections) > 0){
+                foreach($sections as $section){
+                    $secs = section_opened::where(["sectionopenedID"=>$section['id'],"sectionopenedSoftDelete"=>0])->get();
+                    if(count($secs) > 0){
+                        foreach($secs as $sec){
+                            array_push($arr_section,$sec);
+                        }
+                    }
+                }
+            }
+
+            return response()->json(count($arr_section));
+        }
+        catch(Exception $e){
+            Log::error($e->getMessage());
+        }
     }
 
     protected function total_admins($tokens){
@@ -155,38 +171,38 @@ class GeneralController extends Controller
         }
     }
 
-    // protected function notifyMinorToDean(Request $request){
-    //     try{
-    //         $validator = Validator::make($request->all(),[
-    //             'tokens'=>"required",
-    //             'other_dep'=>"required",
-    //         ]);
+    protected function minor_to_otherDepartment(Request $request){
+        try{
+            $validator = Validator::make($request->all(),[
+                'tokens'=>"required",
+                'other_dep'=>"required",
+            ]);
 
-    //         if($validator->fails()){
+            if($validator->fails()){
 
-    //             if($validator->errors()->has('other_dep')){
-    //                 $msgError = $validator->errors()->first('other_dep');
-    //                 Log::error($msgError);
-    //             }
+                if($validator->errors()->has('other_dep')){
+                    $msgError = $validator->errors()->first('other_dep');
+                    Log::error($msgError);
+                }
 
-    //             if($validator->errors()->has('tokens')){
-    //                 $msgError = $validator->errors()->first('tokens');
-    //                 Log::error($msgError);
-    //             }
-    //         }
+                if($validator->errors()->has('tokens')){
+                    $msgError = $validator->errors()->first('tokens');
+                    Log::error($msgError);
+                }
+            }
 
-    //         $department = $this->tokenDepartment($request->input('tokens'));
+            $department = $this->tokenDepartment($request->input('tokens'));
 
-    //         $userOtherDepartment = User::where(['userDepartment'=>$request->input('other_dep'),"userRole"=>"dean"])
-    //         ->select("userEmail as email")
-    //         ->first();
+            $userOtherDepartment = User::where(['userDepartment'=>$request->input('other_dep'),"userRole"=>"dean"])
+            ->select("userEmail as email")
+            ->first();
 
-    //         Mail::to($userOtherDepartment->email)->send(new MinorToDean(strtoUpper($department),strtoUpper($request->input('other_dep'))));
-    //         return response()->json(["status"=>true,"msg"=>"Sent Successfully"]);
+            Mail::to($userOtherDepartment->email)->send(new MinorToDean(strtoUpper($department),strtoUpper($request->input('other_dep'))));
+            return response()->json(["status"=>true,"msg"=>"Sent Successfully"]);
 
-    //     }
-    //     catch(Exception $e){
-    //         Log::error($e->getMessage());
-    //     }
-    // }
+        }
+        catch(Exception $e){
+            Log::error($e->getMessage());
+        }
+    }
 }

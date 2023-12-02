@@ -1,8 +1,8 @@
 <template>
     <template v-if="computingLoading" >
-        <section class="t-h-screen t-grid t-justify-center t-items-center" >
+        <section class="t-h-screen t-grid t-justify-center t-items-center t-bg-slate-400" >
             <div class="" >
-                Loading...
+                <animation></animation>
             </div>
         </section>
     </template>
@@ -30,6 +30,7 @@ import { sectionStore } from '../services/sections';
 import { professorStore } from '../services/professors';
 
 const sidebarComponent = defineAsyncComponent(()=>import('./partials/sidebar.vue'))
+const animation = defineAsyncComponent(()=>import('./partials/animation/animation.vue'));
 
 const activeRequests = ref(0);
 const computingLoading = computed(() => {
